@@ -1,0 +1,793 @@
+[
+  {
+    "sha": "b9fd7fdd",
+    "class": "meaningful-test",
+    "real_bug": false,
+    "severity": "low",
+    "eng_hours": 1
+  },
+  {
+    "sha": "b41dad27",
+    "class": "meaningful-test",
+    "real_bug": false,
+    "severity": "low",
+    "eng_hours": 0.5
+  },
+  {
+    "sha": "a82627a3",
+    "class": "meaningful-test",
+    "real_bug": false,
+    "severity": "low",
+    "eng_hours": 0.5
+  },
+  {
+    "sha": "ad6a7969",
+    "class": "meaningful-test",
+    "real_bug": false,
+    "severity": "low",
+    "eng_hours": 1
+  },
+  {
+    "sha": "30021c94",
+    "class": "security-or-safety",
+    "real_bug": true,
+    "severity": "low",
+    "eng_hours": 1.5
+  },
+  {
+    "sha": "c7788803",
+    "class": "reliability",
+    "real_bug": true,
+    "severity": "low",
+    "eng_hours": 1
+  },
+  {
+    "sha": "cb5f655d",
+    "class": "reliability",
+    "real_bug": true,
+    "severity": "medium",
+    "eng_hours": 1
+  },
+  {
+    "sha": "29444a5a",
+    "class": "security-or-safety",
+    "real_bug": true,
+    "severity": "high",
+    "eng_hours": 3
+  },
+  {
+    "sha": "2cc86180",
+    "class": "minor",
+    "real_bug": false,
+    "severity": "medium",
+    "eng_hours": 2
+  },
+  {
+    "sha": "e19c378d",
+    "class": "user-facing-bug",
+    "real_bug": true,
+    "severity": "low",
+    "eng_hours": 1
+  },
+  {
+    "sha": "d72f016d",
+    "class": "user-facing-bug",
+    "real_bug": true,
+    "severity": "low",
+    "eng_hours": 0.5
+  },
+  {
+    "sha": "7f48fdc0",
+    "class": "minor",
+    "real_bug": false,
+    "severity": "low",
+    "eng_hours": 0.5
+  },
+  {
+    "sha": "a9c1cca0",
+    "class": "security-or-safety",
+    "real_bug": true,
+    "severity": "medium",
+    "eng_hours": 3
+  },
+  {
+    "sha": "acbbab57",
+    "class": "security-or-safety",
+    "real_bug": true,
+    "severity": "medium",
+    "eng_hours": 1
+  },
+  {
+    "sha": "4140c66f",
+    "class": "security-or-safety",
+    "real_bug": true,
+    "severity": "medium",
+    "eng_hours": 2
+  },
+  {
+    "sha": "f09ef141",
+    "class": "minor",
+    "real_bug": false,
+    "severity": "low",
+    "eng_hours": 1
+  },
+  {
+    "sha": "91e8ac71",
+    "class": "security-or-safety",
+    "real_bug": true,
+    "severity": "medium",
+    "eng_hours": 2
+  },
+  {
+    "sha": "dcfcd96a",
+    "class": "user-facing-bug",
+    "real_bug": true,
+    "severity": "low",
+    "eng_hours": 1
+  },
+  {
+    "sha": "d9e21c90",
+    "class": "reliability",
+    "real_bug": true,
+    "severity": "medium",
+    "eng_hours": 1
+  },
+  {
+    "sha": "870fa2c5",
+    "class": "reliability",
+    "real_bug": true,
+    "severity": "medium",
+    "eng_hours": 1
+  },
+  {
+    "sha": "e0eae208",
+    "class": "reliability",
+    "real_bug": true,
+    "severity": "medium",
+    "eng_hours": 0.5
+  },
+  {
+    "sha": "c1053815",
+    "class": "reliability",
+    "real_bug": true,
+    "severity": "medium",
+    "eng_hours": 3
+  },
+  {
+    "sha": "dff6bd66",
+    "class": "security-or-safety",
+    "real_bug": true,
+    "severity": "low",
+    "eng_hours": 1
+  },
+  {
+    "sha": "e2a4fc8a",
+    "class": "security-or-safety",
+    "real_bug": true,
+    "severity": "low",
+    "eng_hours": 0.5
+  },
+  {
+    "sha": "c98b40aa",
+    "class": "security-or-safety",
+    "real_bug": true,
+    "severity": "low",
+    "eng_hours": 1
+  },
+  {
+    "sha": "c34e834d",
+    "class": "minor",
+    "real_bug": false,
+    "severity": "low",
+    "eng_hours": 0.5
+  },
+  {
+    "sha": "f1ee4a1c",
+    "class": "security-or-safety",
+    "real_bug": true,
+    "severity": "low",
+    "eng_hours": 0.5
+  },
+  {
+    "sha": "3a09bd45",
+    "class": "minor",
+    "real_bug": false,
+    "severity": "low",
+    "eng_hours": 0.5
+  },
+  {
+    "sha": "eaeef7b0",
+    "class": "minor",
+    "real_bug": false,
+    "severity": "low",
+    "eng_hours": 1
+  },
+  {
+    "sha": "1b37c058",
+    "class": "minor",
+    "real_bug": false,
+    "severity": "low",
+    "eng_hours": 0.5
+  },
+  {
+    "sha": "1278aa02",
+    "class": "minor",
+    "real_bug": false,
+    "severity": "low",
+    "eng_hours": 0.5
+  },
+  {
+    "sha": "f89fc5d4",
+    "class": "minor",
+    "real_bug": false,
+    "severity": "low",
+    "eng_hours": 0.5
+  },
+  {
+    "sha": "44f19c08",
+    "class": "minor",
+    "real_bug": false,
+    "severity": "low",
+    "eng_hours": 0.5
+  },
+  {
+    "sha": "d3fc3b64",
+    "class": "user-facing-bug",
+    "real_bug": true,
+    "severity": "medium",
+    "eng_hours": 1
+  },
+  {
+    "sha": "b9b34c0f",
+    "class": "security-or-safety",
+    "real_bug": true,
+    "severity": "medium",
+    "eng_hours": 1
+  },
+  {
+    "sha": "4fac3ad3",
+    "class": "security-or-safety",
+    "real_bug": true,
+    "severity": "low",
+    "eng_hours": 0.5
+  },
+  {
+    "sha": "88a00ae8",
+    "class": "security-or-safety",
+    "real_bug": true,
+    "severity": "low",
+    "eng_hours": 0.5
+  },
+  {
+    "sha": "c0fac866",
+    "class": "security-or-safety",
+    "real_bug": true,
+    "severity": "medium",
+    "eng_hours": 1.5
+  },
+  {
+    "sha": "cc7c01e3",
+    "class": "minor",
+    "real_bug": true,
+    "severity": "low",
+    "eng_hours": 0.5
+  },
+  {
+    "sha": "7912c0f2",
+    "class": "minor",
+    "real_bug": true,
+    "severity": "low",
+    "eng_hours": 0.5
+  },
+  {
+    "sha": "cab51c3b",
+    "class": "user-facing-bug",
+    "real_bug": true,
+    "severity": "medium",
+    "eng_hours": 1.5
+  },
+  {
+    "sha": "5a126be1",
+    "class": "user-facing-bug",
+    "real_bug": true,
+    "severity": "medium",
+    "eng_hours": 1.5
+  },
+  {
+    "sha": "f9b69fb6",
+    "class": "reliability",
+    "real_bug": true,
+    "severity": "low",
+    "eng_hours": 1
+  },
+  {
+    "sha": "77106044",
+    "class": "minor",
+    "real_bug": true,
+    "severity": "low",
+    "eng_hours": 0.5
+  },
+  {
+    "sha": "b3e67052",
+    "class": "user-facing-bug",
+    "real_bug": true,
+    "severity": "medium",
+    "eng_hours": 2
+  },
+  {
+    "sha": "ae9f618d",
+    "class": "security-or-safety",
+    "real_bug": true,
+    "severity": "low",
+    "eng_hours": 0.5
+  },
+  {
+    "sha": "ec41b773",
+    "class": "reliability",
+    "real_bug": true,
+    "severity": "medium",
+    "eng_hours": 1
+  },
+  {
+    "sha": "a6f2b1a4",
+    "class": "minor",
+    "real_bug": true,
+    "severity": "low",
+    "eng_hours": 0.5
+  },
+  {
+    "sha": "37ce2bb2",
+    "class": "user-facing-bug",
+    "real_bug": true,
+    "severity": "medium",
+    "eng_hours": 2
+  },
+  {
+    "sha": "41df532c",
+    "class": "minor",
+    "real_bug": true,
+    "severity": "low",
+    "eng_hours": 0.5
+  },
+  {
+    "sha": "0a343c1c",
+    "class": "minor",
+    "real_bug": true,
+    "severity": "low",
+    "eng_hours": 0.25
+  },
+  {
+    "sha": "40e7958b",
+    "class": "user-facing-bug",
+    "real_bug": true,
+    "severity": "medium",
+    "eng_hours": 2
+  },
+  {
+    "sha": "9f7b7de8",
+    "class": "security-or-safety",
+    "real_bug": true,
+    "severity": "low",
+    "eng_hours": 1
+  },
+  {
+    "sha": "8c00dfbc",
+    "class": "user-facing-bug",
+    "real_bug": true,
+    "severity": "low",
+    "eng_hours": 1
+  },
+  {
+    "sha": "5899ef37",
+    "class": "user-facing-bug",
+    "real_bug": true,
+    "severity": "low",
+    "eng_hours": 1.5
+  },
+  {
+    "sha": "a5eead9a",
+    "class": "user-facing-bug",
+    "real_bug": true,
+    "severity": "low",
+    "eng_hours": 0.5
+  },
+  {
+    "sha": "fd50af48",
+    "class": "security-or-safety",
+    "real_bug": true,
+    "severity": "low",
+    "eng_hours": 0.5
+  },
+  {
+    "sha": "a21f07b8",
+    "class": "minor",
+    "real_bug": true,
+    "severity": "low",
+    "eng_hours": 0.5
+  },
+  {
+    "sha": "3cd88f33",
+    "class": "user-facing-bug",
+    "real_bug": true,
+    "severity": "low",
+    "eng_hours": 0.5
+  },
+  {
+    "sha": "ce0864cd",
+    "class": "reliability",
+    "real_bug": true,
+    "severity": "medium",
+    "eng_hours": 2
+  },
+  {
+    "sha": "6c8fe3ff",
+    "class": "reliability",
+    "real_bug": true,
+    "severity": "medium",
+    "eng_hours": 2
+  },
+  {
+    "sha": "95f81374",
+    "class": "user-facing-bug",
+    "real_bug": true,
+    "severity": "low",
+    "eng_hours": 2
+  },
+  {
+    "sha": "034c24d2",
+    "class": "security-or-safety",
+    "real_bug": true,
+    "severity": "low",
+    "eng_hours": 1.5
+  },
+  {
+    "sha": "0e700d93",
+    "class": "user-facing-bug",
+    "real_bug": true,
+    "severity": "low",
+    "eng_hours": 0.5
+  },
+  {
+    "sha": "06365d18",
+    "class": "security-or-safety",
+    "real_bug": true,
+    "severity": "medium",
+    "eng_hours": 2
+  },
+  {
+    "sha": "34db1928",
+    "class": "minor",
+    "real_bug": true,
+    "severity": "low",
+    "eng_hours": 1
+  },
+  {
+    "sha": "15b9ef51",
+    "class": "user-facing-bug",
+    "real_bug": true,
+    "severity": "low",
+    "eng_hours": 1
+  },
+  {
+    "sha": "6482b0b0",
+    "class": "reliability",
+    "real_bug": true,
+    "severity": "medium",
+    "eng_hours": 2
+  },
+  {
+    "sha": "69a06130",
+    "class": "user-facing-bug",
+    "real_bug": true,
+    "severity": "medium",
+    "eng_hours": 2
+  },
+  {
+    "sha": "a34be77d",
+    "class": "reliability",
+    "real_bug": true,
+    "severity": "low",
+    "eng_hours": 1
+  },
+  {
+    "sha": "981b9a38",
+    "class": "reliability",
+    "real_bug": true,
+    "severity": "medium",
+    "eng_hours": 1.5
+  },
+  {
+    "sha": "e6d317d3",
+    "class": "user-facing-bug",
+    "real_bug": true,
+    "severity": "medium",
+    "eng_hours": 2
+  },
+  {
+    "sha": "7b62ec08",
+    "class": "reliability",
+    "real_bug": true,
+    "severity": "medium",
+    "eng_hours": 1
+  },
+  {
+    "sha": "9151514d",
+    "class": "user-facing-bug",
+    "real_bug": true,
+    "severity": "medium",
+    "eng_hours": 2
+  },
+  {
+    "sha": "bc711bb7",
+    "class": "security-or-safety",
+    "real_bug": true,
+    "severity": "low",
+    "eng_hours": 1
+  },
+  {
+    "sha": "7eff7348",
+    "class": "reliability",
+    "real_bug": true,
+    "severity": "low",
+    "eng_hours": 1.5
+  },
+  {
+    "sha": "da86f216",
+    "class": "user-facing-bug",
+    "real_bug": true,
+    "severity": "medium",
+    "eng_hours": 1
+  },
+  {
+    "sha": "8546101a",
+    "class": "security-or-safety",
+    "real_bug": true,
+    "severity": "medium",
+    "eng_hours": 1
+  },
+  {
+    "sha": "757a9b6d",
+    "class": "reliability",
+    "real_bug": true,
+    "severity": "low",
+    "eng_hours": 1
+  },
+  {
+    "sha": "22da1505",
+    "class": "reliability",
+    "real_bug": true,
+    "severity": "low",
+    "eng_hours": 1
+  },
+  {
+    "sha": "34056160",
+    "class": "minor",
+    "real_bug": false,
+    "severity": "low",
+    "eng_hours": 1
+  },
+  {
+    "sha": "65757d89",
+    "class": "security-or-safety",
+    "real_bug": false,
+    "severity": "low",
+    "eng_hours": 0.5
+  },
+  {
+    "sha": "502bd15d",
+    "class": "security-or-safety",
+    "real_bug": true,
+    "severity": "low",
+    "eng_hours": 1
+  },
+  {
+    "sha": "98fc1472",
+    "class": "security-or-safety",
+    "real_bug": false,
+    "severity": "low",
+    "eng_hours": 1
+  },
+  {
+    "sha": "8aaa7014",
+    "class": "security-or-safety",
+    "real_bug": true,
+    "severity": "medium",
+    "eng_hours": 1.5
+  },
+  {
+    "sha": "1a88e2e9",
+    "class": "security-or-safety",
+    "real_bug": true,
+    "severity": "low",
+    "eng_hours": 1
+  },
+  {
+    "sha": "9224ca1a",
+    "class": "security-or-safety",
+    "real_bug": false,
+    "severity": "low",
+    "eng_hours": 0.5
+  },
+  {
+    "sha": "d774dd50",
+    "class": "reliability",
+    "real_bug": true,
+    "severity": "low",
+    "eng_hours": 1.5
+  },
+  {
+    "sha": "88ceaadf",
+    "class": "security-or-safety",
+    "real_bug": true,
+    "severity": "medium",
+    "eng_hours": 1.5
+  },
+  {
+    "sha": "1b19fc3c",
+    "class": "user-facing-bug",
+    "real_bug": true,
+    "severity": "low",
+    "eng_hours": 1
+  },
+  {
+    "sha": "802cdf14",
+    "class": "user-facing-bug",
+    "real_bug": true,
+    "severity": "low",
+    "eng_hours": 1.5
+  },
+  {
+    "sha": "cfd77296",
+    "class": "minor",
+    "real_bug": true,
+    "severity": "low",
+    "eng_hours": 1
+  },
+  {
+    "sha": "c4d092ec",
+    "class": "user-facing-bug",
+    "real_bug": true,
+    "severity": "medium",
+    "eng_hours": 1.5
+  },
+  {
+    "sha": "145331c4",
+    "class": "user-facing-bug",
+    "real_bug": true,
+    "severity": "low",
+    "eng_hours": 1.5
+  },
+  {
+    "sha": "6f807293",
+    "class": "user-facing-bug",
+    "real_bug": true,
+    "severity": "low",
+    "eng_hours": 2
+  },
+  {
+    "sha": "2be5c789",
+    "class": "user-facing-bug",
+    "real_bug": true,
+    "severity": "low",
+    "eng_hours": 1.5
+  },
+  {
+    "sha": "51a3aff8",
+    "class": "user-facing-bug",
+    "real_bug": true,
+    "severity": "low",
+    "eng_hours": 1
+  },
+  {
+    "sha": "eab238c6",
+    "class": "user-facing-bug",
+    "real_bug": true,
+    "severity": "low",
+    "eng_hours": 1
+  },
+  {
+    "sha": "138353ac",
+    "class": "user-facing-bug",
+    "real_bug": true,
+    "severity": "low",
+    "eng_hours": 2
+  },
+  {
+    "sha": "6208b680",
+    "class": "user-facing-bug",
+    "real_bug": true,
+    "severity": "low",
+    "eng_hours": 0.5
+  },
+  {
+    "sha": "64cb5f5b",
+    "class": "user-facing-bug",
+    "real_bug": true,
+    "severity": "low",
+    "eng_hours": 0.5
+  },
+  {
+    "sha": "981182ea",
+    "class": "user-facing-bug",
+    "real_bug": true,
+    "severity": "low",
+    "eng_hours": 1
+  },
+  {
+    "sha": "12fc12a2",
+    "class": "user-facing-bug",
+    "real_bug": true,
+    "severity": "low",
+    "eng_hours": 1.5
+  },
+  {
+    "sha": "7cd5e02c",
+    "class": "user-facing-bug",
+    "real_bug": true,
+    "severity": "low",
+    "eng_hours": 0.5
+  },
+  {
+    "sha": "922321f4",
+    "class": "reliability",
+    "real_bug": true,
+    "severity": "low",
+    "eng_hours": 1.5
+  },
+  {
+    "sha": "1b1cfd2c",
+    "class": "user-facing-bug",
+    "real_bug": true,
+    "severity": "low",
+    "eng_hours": 0.25
+  },
+  {
+    "sha": "cccb5054",
+    "class": "meaningful-test",
+    "real_bug": false,
+    "severity": "medium",
+    "eng_hours": 1
+  },
+  {
+    "sha": "455ab45d",
+    "class": "meaningful-test",
+    "real_bug": false,
+    "severity": "medium",
+    "eng_hours": 0.5
+  },
+  {
+    "sha": "877595d2",
+    "class": "meaningful-test",
+    "real_bug": false,
+    "severity": "low",
+    "eng_hours": 0.5
+  },
+  {
+    "sha": "d48f8533",
+    "class": "meaningful-test",
+    "real_bug": false,
+    "severity": "medium",
+    "eng_hours": 0.5
+  },
+  {
+    "sha": "48c97251",
+    "class": "meaningful-test",
+    "real_bug": false,
+    "severity": "medium",
+    "eng_hours": 0.5
+  },
+  {
+    "sha": "f92788cd",
+    "class": "meaningful-test",
+    "real_bug": false,
+    "severity": "medium",
+    "eng_hours": 0.5
+  },
+  {
+    "sha": "e0e629c1",
+    "class": "meaningful-test",
+    "real_bug": false,
+    "severity": "medium",
+    "eng_hours": 0.5
+  }
+]

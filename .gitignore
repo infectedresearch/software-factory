@@ -1,0 +1,11 @@
+__pycache__/
+.pytest_cache/
+.venv/
+node_modules/
+harness/state/
+harness/lanes/
+*.log
+*.sqlite*
+.env
+.env.*
+research/page/paper-pdf.cjs

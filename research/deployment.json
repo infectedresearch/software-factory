@@ -1,0 +1,23 @@
+{
+  "commit": "9a5e6198f4f9",
+  "edge_release": "20261027T020402Z",
+  "lab_supervised_services_restarted": 40,
+  "additional_units": [
+    "clipper-web",
+    "clipper-worker"
+  ],
+  "edge_managed_artifacts_matching": 211,
+  "checks": [
+    "mobile/web OAuth handoff",
+    "authenticated Studio browser and chat UI",
+    "Studio identity canary",
+    "public landing/tracker/game pages",
+    "public API OpenAPI schema",
+    "synthetic follow alert visibly rendered through public overlay"
+  ],
+  "limitations": [
+    "OAuth provider credential entry and chat message sending were not exercised",
+    "No git remote is configured; local master merged and production deployed"
+  ],
+  "startup_observation": "username-history backfill held the SQLite writer lock briefly; completed; subsequent sampled service logs had no errors"
+}
