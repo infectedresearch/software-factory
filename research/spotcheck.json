@@ -1,0 +1,124 @@
+{
+  "method": "12 'keep' commits drawn with random.Random(20261027): 6 of 18 high-risk keeps, 6 of 95 other keeps. Four independent Opus checkers, 3 commits each, blind to the reviewer's verdict and reason. Read-only; they ran tests in scratch worktrees.",
+  "results": [
+    {
+      "sha": "d9e21c90",
+      "lane": "lane-3",
+      "risk": "high",
+      "verdict": "keep",
+      "value": "reliability",
+      "real_bug": true,
+      "confidence": "high"
+    },
+    {
+      "sha": "4140c66f",
+      "lane": "lane-2",
+      "risk": "high",
+      "verdict": "keep",
+      "value": "security-or-safety",
+      "real_bug": true,
+      "confidence": "medium"
+    },
+    {
+      "sha": "9151514d",
+      "lane": "lane-8",
+      "risk": "high",
+      "verdict": "keep",
+      "value": "user-facing-bug",
+      "real_bug": true,
+      "confidence": "medium"
+    },
+    {
+      "sha": "91e8ac71",
+      "lane": "lane-2",
+      "risk": "high",
+      "verdict": "keep",
+      "value": "security-or-safety",
+      "real_bug": true,
+      "confidence": "medium"
+    },
+    {
+      "sha": "95f81374",
+      "lane": "lane-7",
+      "risk": "high",
+      "verdict": "keep",
+      "value": "user-facing-bug",
+      "real_bug": true,
+      "confidence": "high"
+    },
+    {
+      "sha": "a34be77d",
+      "lane": "lane-8",
+      "risk": "high",
+      "verdict": "drop",
+      "value": "minor",
+      "real_bug": false,
+      "confidence": "medium"
+    },
+    {
+      "sha": "a21f07b8",
+      "lane": "lane-6",
+      "risk": "normal",
+      "verdict": "keep",
+      "value": "minor",
+      "real_bug": true,
+      "confidence": "high"
+    },
+    {
+      "sha": "29444a5a",
+      "lane": "lane-0",
+      "risk": "normal",
+      "verdict": "keep",
+      "value": "security-or-safety",
+      "real_bug": true,
+      "confidence": "high"
+    },
+    {
+      "sha": "44f19c08",
+      "lane": "lane-4",
+      "risk": "normal",
+      "verdict": "keep",
+      "value": "minor",
+      "real_bug": true,
+      "confidence": "high"
+    },
+    {
+      "sha": "dc7b1fd6",
+      "lane": "lane-0",
+      "risk": "tests",
+      "verdict": "keep",
+      "value": "minor",
+      "real_bug": false,
+      "confidence": "high"
+    },
+    {
+      "sha": "34056160",
+      "lane": "lane-10",
+      "risk": "normal",
+      "verdict": "keep",
+      "value": "minor",
+      "real_bug": false,
+      "confidence": "medium"
+    },
+    {
+      "sha": "3cd88f33",
+      "lane": "lane-6",
+      "risk": "normal",
+      "verdict": "keep",
+      "value": "user-facing-bug",
+      "real_bug": true,
+      "confidence": "high"
+    }
+  ],
+  "summary": {
+    "agree_keep": 11,
+    "disagree": 1,
+    "value": {
+      "security-or-safety": 3,
+      "user-facing-bug": 3,
+      "reliability": 1,
+      "minor": 4
+    },
+    "claimed_bug_not_real": 3
+  }
+}

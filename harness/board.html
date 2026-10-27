@@ -1,0 +1,476 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Software factory</title>
+<style>
+  :root {
+    color-scheme: dark;
+    --bg: #0f110d; --panel: #171a14; --raise: #1f231a; --line: #2a3023;
+    --text: #f1ede2; --muted: #9a9384; --faint: #6c675c;
+    --green: #a9d46a; --red: #e58b7a; --amber: #e5c16a; --blue: #8db7ee; --grey: #7d786d; --violet: #c5a3f0;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font: 15px/1.5 "Segoe UI", system-ui, sans-serif; }
+  .wrap { max-width: 1120px; margin: 0 auto; padding: 0 18px 48px; }
+  header { display: flex; align-items: center; gap: 10px; padding: 20px 0 6px; flex-wrap: wrap; }
+  .brand { font-size: 13px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: var(--muted); margin-right: auto; }
+  .sub { color: var(--faint); font-size: 13px; }
+  nav { display: flex; gap: 4px; margin: 14px 0 4px; border-bottom: 1px solid var(--line); }
+  nav button { background: none; border: 0; border-bottom: 2px solid transparent; color: var(--muted); padding: 10px 14px; font: inherit; cursor: pointer; }
+  nav button[aria-selected="true"] { color: var(--text); border-bottom-color: var(--green); }
+  .count { display: inline-block; min-width: 20px; padding: 0 6px; margin-left: 6px; border-radius: 999px; background: var(--raise); font-size: 12px; text-align: center; }
+  section.card { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 16px 18px; margin-top: 14px; }
+  h2 { margin: 0 0 10px; font-size: 12px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+  .pill { display: inline-flex; align-items: center; gap: 7px; padding: 5px 10px; border-radius: 999px; font-size: 11px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; background: var(--raise); }
+  .pill i { width: 8px; height: 8px; border-radius: 50%; background: currentColor; }
+  .working { color: var(--amber); } .testing { color: var(--blue); } .reviewing { color: var(--violet); } .between, .starting { color: var(--green); }
+  .stopped, .stopping { color: var(--red); }
+  .pulse i { animation: pulse 1.4s ease-in-out infinite; }
+  @keyframes pulse { 50% { opacity: .25; } }
+  button.act, select { background: var(--raise); color: var(--text); border: 1px solid var(--line); border-radius: 8px; padding: 6px 11px; font: inherit; font-size: 13px; cursor: pointer; }
+  button.act:hover { border-color: var(--muted); }
+  button.go { border-color: #4b6a2c; color: var(--green); }
+  button.warn { border-color: #6a3a30; color: var(--red); }
+  button.small { padding: 3px 9px; font-size: 12px; }
+  button:disabled { opacity: .45; cursor: not-allowed; }
+  .meta { color: var(--muted); font-size: 13px; }
+  .bar { height: 10px; border-radius: 999px; background: #0a0c08; overflow: hidden; display: flex; }
+  .bar span { display: block; height: 100%; }
+  .kpis { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; margin-top: 14px; }
+  .kpi { background: var(--raise); border-radius: 10px; padding: 10px 12px; }
+  .kpi b { display: block; font-size: 22px; font-weight: 600; font-variant-numeric: tabular-nums; }
+  .kpi span { color: var(--muted); font-size: 12px; }
+  .lanes { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 14px; }
+  .lane { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 14px 16px; display: flex; flex-direction: column; gap: 8px; min-height: 210px; }
+  .lane-head { display: flex; align-items: center; gap: 8px; }
+  .lane-name { font-weight: 650; margin-right: auto; }
+  .lane-id { color: var(--faint); font-size: 12px; font-weight: 400; margin-left: 6px; }
+  .lane-now { font-size: 17px; line-height: 1.35; letter-spacing: -.01em; }
+  .lane-foot { margin-top: auto; display: flex; gap: 14px; color: var(--muted); font-size: 12px; flex-wrap: wrap; }
+  .steps { list-style: none; margin: 0; padding: 0; }
+  .steps li { display: flex; gap: 8px; padding: 2px 0; color: var(--muted); font-size: 13px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+  .tag { flex: none; width: 50px; font-size: 10px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; padding-top: 2px; }
+  .k-read, .k-search { color: var(--blue); } .k-edit { color: var(--amber); } .k-test, .k-commit { color: var(--green); } .k-git, .k-shell { color: var(--grey); }
+  .row { display: grid; grid-template-columns: 54px 44px 86px 58px 1fr 110px; gap: 10px; align-items: center; padding: 8px 0; border-top: 1px solid var(--line); font-size: 14px; }
+  details:first-child > .row { border-top: 0; }
+  details > summary { list-style: none; cursor: pointer; }
+  details > summary::-webkit-details-marker { display: none; }
+  .badge { font-size: 11px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; }
+  .o-landed { color: var(--green); } .o-rejected, .o-failed { color: var(--red); } .o-running { color: var(--amber); }
+  .o-testing { color: var(--blue); } .o-reviewing { color: var(--violet); } .o-dropped { color: var(--red); } .o-needs-fix { color: var(--amber); }
+  .o-empty, .o-interrupted, .o-unchecked { color: var(--grey); }
+  .num { color: var(--muted); font-variant-numeric: tabular-nums; }
+  .what { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .more { padding: 4px 0 12px 64px; color: var(--muted); font-size: 13px; }
+  .more p { margin: 4px 0; }
+  .sha { font-family: ui-monospace, "Cascadia Code", monospace; font-size: 12px; color: var(--faint); }
+  .lane-tag { font-size: 11px; color: var(--violet); }
+  .note { padding: 10px 12px; border-radius: 10px; background: #1d1a12; border: 1px solid #3a3220; color: #d8c79a; font-size: 13px; }
+  .toast { position: fixed; left: 50%; bottom: 18px; transform: translateX(-50%); max-width: 640px; padding: 10px 14px; border-radius: 10px; background: var(--raise); border: 1px solid var(--line); box-shadow: 0 8px 30px #0008; font-size: 14px; display: none; z-index: 9; }
+  .toast.show { display: block; } .toast.bad { border-color: #6a3a30; } .toast.good { border-color: #4b6a2c; }
+  .chips { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 4px; }
+  .chip { display: inline-block; margin: 2px 6px 2px 0; padding: 1px 7px; border-radius: 6px; background: var(--raise); font-size: 11px; color: var(--muted); }
+  .chip.good { color: var(--green); } .chip.bad { color: var(--red); } .chip.warn { color: var(--amber); } .chip.violet { color: var(--violet); }
+  .lane-pick { background: var(--raise); border: 1px solid var(--line); color: var(--muted); border-radius: 999px; padding: 5px 12px; font: inherit; font-size: 13px; cursor: pointer; }
+  .lane-pick[aria-pressed="true"] { color: var(--text); border-color: var(--green); }
+  .commit { border-top: 1px solid var(--line); padding: 12px 0; }
+  .commit:first-child { border-top: 0; }
+  .commit .files { color: var(--faint); font-size: 12px; margin-top: 2px; }
+  .commit .tools { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+  pre.diff { margin: 10px 0 0; padding: 10px 12px; max-height: 460px; overflow: auto; background: #0a0c08; border-radius: 8px; font: 12px/1.45 ui-monospace, "Cascadia Code", monospace; white-space: pre; }
+  .d-add { color: var(--green); } .d-del { color: var(--red); } .d-hunk { color: var(--blue); } .d-file { color: var(--text); font-weight: 700; }
+  .log { font: 12px/1.6 ui-monospace, monospace; color: var(--muted); max-height: 260px; overflow: auto; }
+  [hidden] { display: none !important; }
+  @media (max-width: 820px) {
+    .kpis { grid-template-columns: repeat(2, 1fr); }
+    .lanes { grid-template-columns: 1fr; }
+    .row { grid-template-columns: 50px 44px 1fr; }
+    .row .lane-tag, .row .dur, .row .tok { display: none; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="brand">Software factory</div>
+    <span class="meta" id="running"></span>
+    <label class="meta">Writer <select id="model" title="Model that writes each lane's next pass"></select></label>
+    <label class="meta">Reviewer <select id="reviewer" title="Model that reviews each kept commit"></select></label>
+    <label class="meta"><input type="checkbox" id="inline-review"> review every pass</label>
+    <button class="act warn" id="stop-all" type="button">Stop all after their pass</button>
+    <button class="act go" id="start-all" type="button">Start stopped lanes</button>
+  </header>
+  <div class="sub">Nothing here is deployed. Each lane commits to its own branch; master changes only when you include a commit.</div>
+
+  <nav role="tablist">
+    <button role="tab" id="tab-floor" aria-selected="true">Floor</button>
+    <button role="tab" id="tab-review" aria-selected="false">Review for master<span class="count" id="review-count">–</span></button>
+  </nav>
+
+  <main id="floor">
+    <section class="card">
+      <h2>Tonight</h2>
+      <div class="bar"><span id="time-fill" style="background:var(--green);width:0"></span></div>
+      <div class="meta" id="time-text" style="margin-top:8px"></div>
+      <div class="kpis" id="kpis"></div>
+    </section>
+
+    <section class="card">
+      <h2>Can it all go onto master?</h2>
+      <div id="integration" class="meta">The first integration check has not finished yet.</div>
+    </section>
+
+    <div class="lanes" id="lanes"></div>
+
+    <section class="card">
+      <h2>Passes, all lanes</h2>
+      <div class="meta" style="margin-bottom:6px"><span class="o-landed">Kept</span>: passed the tests and the smart reviewer kept it. <span class="o-needs-fix">Needs fix</span>: kept, and the lane's next pass must fix what the reviewer named. <span class="o-dropped">Dropped</span>: the reviewer judged it not worth having. <span class="o-rejected">Rejected</span>: the tests found a new failure. Dropped and rejected work is moved off the branch. Click a row for details.</div>
+      <div id="passes"></div>
+    </section>
+  </main>
+
+  <main id="review" hidden>
+    <section class="card">
+      <h2>How this works</h2>
+      <p class="meta" style="margin:0">Each lane's commits wait here until you decide. <b>Include</b> copies the oldest waiting commit of a lane onto <b>master</b> in the lab checkout. It does not deploy or restart anything; the chips say what would need a restart or a ship. <b>Skip</b> leaves a commit off master. <span class="chip violet">smart review</span> chips show the reviewer model's verdict once it has run.</p>
+      <p class="note" id="master-note" style="margin:10px 0 0" hidden></p>
+    </section>
+    <section class="card">
+      <div class="chips" id="lane-picks"></div>
+      <h2 style="margin-top:12px">Branch audit</h2>
+      <div id="audit" class="meta"></div>
+      <div style="margin-top:10px"><button class="act" id="run-audit" type="button">Check this lane's branch against master</button></div>
+    </section>
+    <section class="card">
+      <h2>Smart review</h2>
+      <div id="smart" class="meta"></div>
+      <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap">
+        <button class="act" id="run-smart" type="button">Review this lane's waiting commits with the smart model</button>
+        <button class="act go" id="include-kept" type="button">Include everything the reviewer kept</button>
+      </div>
+    </section>
+    <section class="card">
+      <h2>Waiting, oldest first</h2>
+      <div id="queue"></div>
+    </section>
+    <section class="card">
+      <h2>Recently included</h2>
+      <div id="included" class="meta"></div>
+    </section>
+  </main>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;"}[c]));
+const PHASE = {
+  working: ["Working", "working pulse"], testing: ["Testing", "testing pulse"], reviewing: ["Reviewing", "reviewing pulse"], between: ["Next pass", "between"],
+  starting: ["Starting", "starting"], stopping: ["Stopping", "stopping"], stopped: ["Stopped", "stopped"],
+};
+const OUTCOME = {
+  landed: "Kept", rejected: "Rejected", failed: "Failed", empty: "No change", running: "Working",
+  testing: "Testing", reviewing: "Reviewing", dropped: "Dropped", "needs-fix": "Needs fix", interrupted: "Cut off", unchecked: "Unchecked",
+};
+const VERDICT = { keep: ["good", "keep"], drop: ["bad", "drop"], fix: ["warn", "needs a fix"] };
+let last = null, review = null, tab = "floor", reviewLane = null, skew = 0;
+const openRows = new Set();
+const diffs = new Map();
+
+function dur(sec) {
+  if (sec == null || isNaN(sec)) return "—";
+  sec = Math.max(0, Math.round(sec));
+  const h = Math.floor(sec / 3600), m = Math.floor(sec % 3600 / 60), s = sec % 60;
+  if (h) return `${h}h ${m}m`;
+  if (m) return `${m}m ${String(s).padStart(2, "0")}s`;
+  return `${s}s`;
+}
+const clock = (epoch) => epoch ? new Date(epoch * 1000).toLocaleTimeString([], {hour: "numeric", minute: "2-digit"}) : "—";
+const iso = (s) => s ? Date.parse(s) / 1000 : null;
+function tok(n) {
+  n = Number(n || 0);
+  if (n >= 1e6) return (n / 1e6).toFixed(1) + "M";
+  if (n >= 1e3) return Math.round(n / 1e3) + "k";
+  return String(n);
+}
+const fresh = (t) => (t.prompt || 0) + (t.thinking || 0) + (t.written || 0);
+const laneNo = (id) => String(id || "").replace("lane-", "L");
+function setHTML(el, html) { if (el._html !== html) { el.innerHTML = html; el._html = html; } }
+function toast(text, good) {
+  const el = $("toast");
+  el.textContent = text;
+  el.className = "toast show " + (good ? "good" : "bad");
+  clearTimeout(el._t);
+  el._t = setTimeout(() => { el.className = "toast"; }, 6000);
+}
+async function post(path, body) {
+  const res = await fetch(path, {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify(body || {})});
+  try { return await res.json(); } catch { return {ok: false, error: `HTTP ${res.status}`}; }
+}
+
+function renderFloor(o) {
+  $("running").textContent = `${o.running} of ${o.lanes.length} lanes running`;
+  $("stop-all").hidden = !o.running;
+  $("start-all").hidden = o.running === o.lanes.length;
+  const sel = $("model");
+  if (!sel.options.length) sel.innerHTML = o.models.map((m) => `<option>${esc(m)}</option>`).join("");
+  if (document.activeElement !== sel) sel.value = o.model;
+
+  const rsel = $("reviewer");
+  if (!rsel.options.length) rsel.innerHTML = o.reviewers.map((m) => `<option>${esc(m)}</option>`).join("");
+  if (document.activeElement !== rsel) rsel.value = o.reviewer;
+  $("inline-review").checked = o.inline_review;
+  const ig = o.integration;
+  setHTML($("integration"), !ig ? "The first integration check has not finished yet. It runs every 45 minutes."
+    : `<b style="color:var(--text)">${ig.applied} of ${ig.candidates}</b> waiting commits from all lanes apply together onto master (${esc(ig.master)}), `
+      + (ig.gate ? `and the combined result <span class="${ig.gate.tests_passed ? "o-landed" : "o-rejected"}">${ig.gate.tests_passed ? "passes" : "fails"} the tests</span> (${esc(ig.gate.node_files)} node test files and the full Python suite, ${esc(ig.gate.pytest_files)} files; ${esc(ig.gate.pytest_preexisting ?? "?")} Python tests already fail on master and are not counted)` : "with no tests run")
+      + `. Checked ${clock(iso(ig.at))}.`
+      + (ig.gate && (ig.gate.test_failures || []).length ? `<p class="o-rejected">${ig.gate.test_failures.map(esc).join("<br>")}</p>` : "")
+      + ((ig.blamed || []).length ? `<p>Traced to: ` + ig.blamed.map((b) => `${esc(laneNo(b.lane))} <span class="sha">${esc(b.short)}</span> ${esc(b.subject)} breaks <span class="sha">${esc(b.test)}</span>`).join("<br>") + `. That lane's next pass is told to fix it first.</p>` : "")
+      + (ig.gate && (ig.gate.policy_flags || []).length ? `<p class="o-needs-fix">Policy flags for review: ${ig.gate.policy_flags.map(esc).join("<br>")}</p>` : "")
+      + (ig.conflicts.length ? `<p class="o-rejected">These did not apply on top of the rest:</p>` + ig.conflicts.map((c) =>
+          `<p>${esc(laneNo(c.lane))} <span class="sha">${esc(c.short)}</span> ${esc(c.subject)} <span class="meta">(${esc(c.files.join(", "))})</span></p>`).join("") : ""));
+  const used = o.run_started ? o.now - o.run_started : null;
+  const span = o.run_started && o.until ? o.until - o.run_started : null;
+  $("time-fill").style.width = span ? Math.min(100, 100 * used / span) + "%" : "0";
+  $("time-text").textContent = o.until ? `Stops by ${clock(o.until)} · ${dur(Math.max(0, o.until - o.now))} left` : "No end time set.";
+  const c = o.counts || {};
+  setHTML($("kpis"), [
+    [tok(o.tokens_last_hour), "tokens in the last hour"],
+    [tok(fresh(o.tokens)), `tokens total (+${tok(o.tokens.cached)} cached)`],
+    [(c.landed || 0) + (c["needs-fix"] || 0), "kept"],
+    [c.dropped || 0, "dropped by the reviewer"],
+    [(c.rejected || 0) + (c.failed || 0), "rejected by tests"],
+    [c.empty || 0, "made no change"],
+  ].map(([v, k]) => `<div class="kpi"><b>${esc(v)}</b><span>${esc(k)}</span></div>`).join(""));
+
+  setHTML($("lanes"), o.lanes.map((s) => {
+    const [label, cls] = PHASE[s.phase] || [s.phase, "stopped"];
+    const cur = s.current;
+    const live = cur && (s.phase === "working" || s.phase === "testing" || s.phase === "reviewing");
+    const steps = s.phase === "working" ? (s.steps || []).slice(-3).reverse() : [];
+    const sc = s.counts || {};
+    return `<div class="lane">
+      <div class="lane-head">
+        <span class="lane-name">${esc(s.name)}<span class="lane-id">${esc(s.lane)} · ${esc(s.branch)}</span></span>
+        <span class="pill ${cls}"><i></i>${label}</span>
+      </div>
+      <div class="lane-now">${esc(s.headline)}</div>
+      <ul class="steps">${steps.map((st) => `<li><span class="tag k-${st.kind}">${esc(st.kind)}</span><span>${esc(st.text)}</span></li>`).join("")}</ul>
+      <div class="lane-foot">
+        ${live ? `<span>Pass ${cur.n} · <span data-since="${iso(cur.begin_at)}">${dur(o.now - iso(cur.begin_at))}</span></span>` : ""}
+        <span><span class="o-landed">${(sc.landed || 0) + (sc["needs-fix"] || 0)} kept</span> · <span class="o-dropped">${sc.dropped || 0} dropped</span> · <span class="o-rejected">${(sc.rejected || 0) + (sc.failed || 0)} rejected</span> · ${sc.empty || 0} empty</span>
+        <span>${tok(fresh(s.tokens))} tokens</span>
+        <span style="margin-left:auto">${s.alive
+          ? (s.stop_requested ? "stopping after this pass" : `<button class="act small warn" data-lane-act="stop" data-lane="${s.lane}">Stop</button>`)
+          : s.frozen ? "frozen; review only" : `<button class="act small go" data-lane-act="start" data-lane="${s.lane}">Start</button>`}</span>
+      </div>
+    </div>`;
+  }).join(""));
+
+  const rows = o.lanes.flatMap((s) => (s.passes || []).map((p) => ({...p, lane: s.lane, headline: s.headline})));
+  rows.sort((a, b) => (iso(b.begin_at) || 0) - (iso(a.begin_at) || 0));
+  const shown = rows.slice(0, 60);
+  const max = Math.max(1, ...shown.map((p) => fresh(p.tokens || {})));
+  setHTML($("passes"), shown.map((p) => {
+    const t = p.tokens || {};
+    const total = fresh(t);
+    const w = (n) => (100 * n / max).toFixed(1) + "%";
+    const subject = p.commits.length ? p.commits.map((x) => x.subject).join(" · ")
+      : p.outcome === "running" ? p.headline
+      : p.outcome === "empty" ? "Made no commit" : p.outcome === "interrupted" ? "Stopped mid-pass" : "";
+    const key = `${p.lane}-${p.n}`;
+    const liveRow = p.outcome === "running" || p.outcome === "testing" || p.outcome === "reviewing";
+    return `<details data-key="${key}"${openRows.has(key) ? " open" : ""}><summary class="row">
+      <span class="lane-tag">${esc(laneNo(p.lane))}</span><span class="num">#${p.n}</span>
+      <span class="badge o-${p.outcome}">${OUTCOME[p.outcome] || p.outcome}</span>
+      ${liveRow ? `<span class="num dur" data-since="${iso(p.begin_at)}">${dur(o.now - iso(p.begin_at))}</span>` : `<span class="num dur">${dur(p.seconds)}</span>`}
+      <span class="what">${esc(subject)}</span>
+      <span class="tok" title="${tok(total)} new tokens"><span class="bar" style="height:6px"><span style="width:${w(t.prompt || 0)};background:var(--blue)"></span><span style="width:${w(t.thinking || 0)};background:var(--amber)"></span><span style="width:${w(t.written || 0)};background:var(--green)"></span></span></span>
+    </summary><div class="more">
+      <p>${esc(p.lane)} · started ${clock(iso(p.begin_at))}${p.end_at ? ", ended " + clock(iso(p.end_at)) : ""} · ${esc(p.model || "")}${p.gate_secs ? ` · gate ${esc(p.gate_secs)}s` : ""}</p>
+      ${p.commits.map((x) => `<p><span class="sha">${esc(x.short)}</span> ${esc(x.subject)}</p>`).join("")}
+      ${(p.reviews || []).map((r) => `<p>Smart review of <span class="sha">${esc(r.short)}</span>: <span class="o-${r.verdict === "keep" ? "landed" : r.verdict === "drop" ? "dropped" : "needs-fix"}">${esc(r.verdict)}</span></p>`).join("")}
+      ${p.rejected ? `<p class="o-rejected">The tests failed; moved off the branch to ${esc(p.rejected)}.</p>` : ""}
+      ${p.dropped ? `<p class="o-dropped">The reviewer dropped it; moved off the branch to ${esc(p.dropped)}.</p>` : ""}
+      ${p.timeout ? `<p class="o-rejected">Hit the 40-minute pass limit.</p>` : ""}
+      ${total ? `<p>Tokens: ${tok(t.prompt)} prompt · ${tok(t.thinking)} thinking · ${tok(t.written)} written · ${tok(t.cached)} reread from cache</p>` : ""}
+    </div></details>`;
+  }).join("") || `<p class="meta">No passes yet.</p>`);
+}
+
+function renderReview(r) {
+  if (!r) return;
+  const lanes = (last && last.lanes) || [];
+  setHTML($("lane-picks"), lanes.map((s) =>
+    `<button class="lane-pick" data-pick="${s.lane}" aria-pressed="${s.lane === reviewLane}">${esc(laneNo(s.lane))} · ${esc(s.name)}</button>`).join(""));
+  $("review-count").textContent = r.items.length;
+  const note = [];
+  if (r.master_dirty) note.push(`The master checkout has ${r.master_dirty} uncommitted files that are not from the factory. An include that touches one of them is refused and master is left unchanged.`);
+  if (r.hidden_tooling) note.push(`${r.hidden_tooling} commits that only touched old factory tooling are hidden.`);
+  if (r.skipped) note.push(`${r.skipped} skipped.`);
+  $("master-note").hidden = !note.length;
+  $("master-note").textContent = note.join(" ");
+
+  const a = r.audit;
+  setHTML($("audit"), r.audit_running ? "Running the full gate against master. This takes several minutes."
+    : a ? `<span class="chip ${a.passed ? "good" : "bad"}">${a.passed ? "passed" : "failed"}</span> at <span class="sha">${esc((a.head || "").slice(0, 8))}</span> in ${esc(a.seconds)}s · ${esc(a.node_files)} node test files, ${esc((a.pytest_files || []).length)} pytest files`
+      + (a.reasons && a.reasons.length ? `<p class="o-rejected">${a.reasons.map(esc).join("<br>")}</p>` : "")
+      + (a.preexisting && a.preexisting.length ? `<p>Already failing on master: ${a.preexisting.map(esc).join(", ")}</p>` : "")
+    : "Not run for this lane yet.");
+  $("run-audit").disabled = r.audit_running;
+  $("smart").textContent = r.review_running
+    ? `Reviewing now. ${r.judged} of ${r.items.length} waiting commits have a verdict; each takes a few minutes.`
+    : `${r.judged} of ${r.items.length} waiting commits have a verdict. The reviewer reads each commit in its own read-only checkout, may run tests, and records keep, drop, or needs a fix.`;
+  $("run-smart").disabled = r.review_running || r.judged === r.items.length;
+
+  setHTML($("queue"), r.items.map((item, i) => {
+    const v = item.verdict;
+    const chips = [
+      item.risk ? `<span class="chip ${item.risk.level === "high" ? "bad" : item.risk.level === "tests" ? "good" : ""}">${item.risk.level === "high" ? "high risk: " : ""}${esc(item.risk.why)}</span>` : "",
+      v ? `<span class="chip ${(VERDICT[v.verdict] || ["", v.verdict])[0]}">smart review: ${esc((VERDICT[v.verdict] || ["", v.verdict])[1])}</span>` : "",
+      item.pass ? `<span class="chip good">passed the gate in pass ${item.pass}</span>` : `<span class="chip">made outside the loop</span>`,
+      ...item.fixed_by.map((f) => `<span class="chip warn">has a follow-up fix in ${esc(f)}, include both</span>`),
+      ...item.fixes.map((f) => `<span class="chip">fixes ${esc(f.slice(0, 8))}</span>`),
+      ...(item.effects || []).map((e) => `<span class="chip ${e.level === "warn" ? "warn" : e.level === "good" ? "good" : ""}">${esc(e.text)}</span>`),
+    ].join("");
+    const key = "d" + item.short;
+    return `<div class="commit">
+      <div><span class="sha">${esc(item.short)}</span> ${esc(item.subject)}</div>
+      <div class="files">${esc(item.files.slice(0, 8).join(", "))}${item.files.length > 8 ? ` +${item.files.length - 8} more` : ""}</div>
+      <div style="margin-top:6px">${chips}</div>
+      ${v && v.reason ? `<p class="meta" style="margin:6px 0 0">${esc(v.reason)}</p>` : ""}
+      <div class="tools">
+        <button class="act go" data-act="include" data-sha="${item.sha}" ${i ? "disabled title=\"Include the older commits first\"" : ""}>Include on master</button>
+        <button class="act" data-act="skip" data-sha="${item.sha}">Skip</button>
+        <button class="act" data-act="diff" data-sha="${item.sha}" data-key="${key}">${openRows.has(key) ? "Hide" : "Show"} changes</button>
+      </div>
+      <pre class="diff" ${openRows.has(key) ? "" : "hidden"}>${diffs.has(item.sha) ? diffs.get(item.sha) : "Loading…"}</pre>
+    </div>`;
+  }).join("") || `<p class="meta">Nothing waiting for this lane.</p>`);
+
+  setHTML($("included"), r.included.map((x) =>
+    `<div><span class="sha">${esc(x.master)}</span> ${esc(x.subject)} · ${esc(clock(iso(x.at)))}</div>`).join("") || "Nothing included yet.");
+}
+
+function colorDiff(text) {
+  return text.split("\n").map((line) => {
+    const e = esc(line);
+    if (line.startsWith("diff --git")) return `<span class="d-file">${e}</span>`;
+    if (line.startsWith("@@")) return `<span class="d-hunk">${e}</span>`;
+    if (line.startsWith("+") && !line.startsWith("+++")) return `<span class="d-add">${e}</span>`;
+    if (line.startsWith("-") && !line.startsWith("---")) return `<span class="d-del">${e}</span>`;
+    return e;
+  }).join("\n");
+}
+
+async function refresh() {
+  try {
+    last = await (await fetch("api/status", {cache: "no-store"})).json();
+    skew = last.now - Date.now() / 1000;
+    if (!reviewLane && last.lanes.length) reviewLane = last.lanes[0].lane;
+    renderFloor(last);
+  } catch (err) { $("running").textContent = "Lost contact with the board. Retrying…"; }
+}
+async function refreshReview() {
+  if (!reviewLane) return;
+  try {
+    review = await (await fetch("api/review?lane=" + encodeURIComponent(reviewLane), {cache: "no-store"})).json();
+    renderReview(review);
+  } catch (err) { /* keep the last view */ }
+}
+
+document.addEventListener("toggle", (ev) => {
+  const key = ev.target.dataset && ev.target.dataset.key;
+  if (!key) return;
+  ev.target.open ? openRows.add(key) : openRows.delete(key);
+}, true);
+
+$("lanes").addEventListener("click", async (ev) => {
+  const b = ev.target.closest("button[data-lane-act]");
+  if (!b) return;
+  b.disabled = true;
+  const r = await post("api/" + b.dataset.laneAct, {lane: b.dataset.lane});
+  toast(r.ok ? (b.dataset.laneAct === "stop" ? "That lane will finish its pass, then stop." : "Lane started.") : r.error, r.ok);
+  setTimeout(refresh, 1200);
+});
+
+$("lane-picks").addEventListener("click", (ev) => {
+  const b = ev.target.closest("button[data-pick]");
+  if (!b) return;
+  reviewLane = b.dataset.pick;
+  $("queue")._html = null;
+  refreshReview();
+});
+
+$("queue").addEventListener("click", async (ev) => {
+  const b = ev.target.closest("button[data-act]");
+  if (!b || b.disabled) return;
+  const {act, sha, key} = b.dataset;
+  if (act === "diff") {
+    if (openRows.has(key)) { openRows.delete(key); $("queue")._html = null; renderReview(review); return; }
+    openRows.add(key);
+    $("queue")._html = null;
+    renderReview(review);
+    if (!diffs.has(sha)) {
+      const d = await (await fetch(`api/diff?lane=${encodeURIComponent(reviewLane)}&sha=${encodeURIComponent(sha)}`)).json();
+      diffs.set(sha, d.error ? esc(d.error) : esc(d.message) + "\n\n" + colorDiff(d.patch) + (d.clipped ? "\n\n… cut off here …" : ""));
+      $("queue")._html = null;
+      renderReview(review);
+    }
+    return;
+  }
+  b.disabled = true;
+  const r = await post("api/review/" + act, {sha, lane: reviewLane});
+  if (act === "include") toast(r.ok ? `On master as ${r.master}. Not deployed and nothing restarted.` : r.error, r.ok);
+  else toast(r.ok ? "Skipped. It stays on the branch but will not be offered again." : r.error, r.ok);
+  await refreshReview();
+});
+
+$("stop-all").onclick = async () => { const r = await post("api/stop", {lane: "all"}); toast(r.ok ? "Every lane will finish its pass, then stop." : r.error, r.ok); refresh(); };
+$("start-all").onclick = async () => { const r = await post("api/start", {lane: "all"}); toast(r.ok ? "Started the stopped lanes." : r.error, r.ok); setTimeout(refresh, 1500); };
+$("model").onchange = async (ev) => { const r = await post("api/model", {model: ev.target.value}); toast(r.ok ? `Each lane's next pass will use ${ev.target.value}.` : r.error, r.ok); };
+$("reviewer").onchange = async (ev) => { const r = await post("api/reviewer", {model: ev.target.value}); toast(r.ok ? `New commits will be reviewed by ${ev.target.value}.` : r.error, r.ok); };
+$("inline-review").onchange = async (ev) => { const r = await post("api/inline-review", {on: ev.target.checked}); toast(r.ok ? (ev.target.checked ? "Every kept pass will be reviewed by the smart model." : "Inline review is off; passes are only tested.") : r.error, r.ok); };
+$("include-kept").onclick = async (ev) => {
+  ev.target.disabled = true;
+  const r = await post("api/review/include-kept", {lane: reviewLane});
+  const parts = [];
+  if (r.included && r.included.length) parts.push(`Included ${r.included.length} on master.`);
+  if (r.skipped && r.skipped.length) parts.push(`Skipped ${r.skipped.length} the reviewer dropped.`);
+  if (r.stopped_at) parts.push(`Stopped at ${r.stopped_at}.`);
+  if (r.error) parts.push(r.error);
+  toast(parts.join(" ") || "Nothing to include.", r.ok);
+  ev.target.disabled = false;
+  refreshReview();
+};
+$("run-smart").onclick = async () => { const r = await post("api/smart-review", {lane: reviewLane}); toast(r.ok ? "Smart review started for this lane." : r.error, r.ok); refreshReview(); };
+$("run-audit").onclick = async () => { const r = await post("api/audit", {lane: reviewLane}); toast(r.ok ? "Audit started." : r.error, r.ok); refreshReview(); };
+
+function show(which) {
+  tab = which;
+  $("floor").hidden = which !== "floor";
+  $("review").hidden = which !== "review";
+  $("tab-floor").setAttribute("aria-selected", String(which === "floor"));
+  $("tab-review").setAttribute("aria-selected", String(which === "review"));
+  if (which === "review") refreshReview();
+  history.replaceState(null, "", which === "review" ? "#review" : "#");
+}
+$("tab-floor").onclick = () => show("floor");
+$("tab-review").onclick = () => show("review");
+
+(async () => {
+  await refresh();
+  show(location.hash === "#review" ? "review" : "floor");
+})();
+setInterval(refresh, 3000);
+setInterval(() => { if (tab === "review") refreshReview(); }, 20000);
+setInterval(() => {
+  const now = Date.now() / 1000 + skew;
+  document.querySelectorAll("[data-since]").forEach((el) => { el.textContent = dur(now - Number(el.dataset.since)); });
+}, 1000);
+</script>
+</body>
+</html>

@@ -1,0 +1,1325 @@
+[
+  {
+    "lane": "lane-0",
+    "sha": "3bd24f55",
+    "risk": "high",
+    "verdict": "fix",
+    "disposition": "included after fix: e4eb4cf6",
+    "author": "not factory output (before the loop started at 19:49Z, or a hand fix)",
+    "subject": "Security/safety or high-risk change (category-only public record)"
+  },
+  {
+    "lane": "lane-0",
+    "sha": "ef335783",
+    "risk": "tests",
+    "verdict": "keep",
+    "disposition": "included",
+    "author": "not factory output (before the loop started at 19:49Z, or a hand fix)",
+    "subject": "nx: assert noindex on the editor and gallery responses (source grep could not see a wrong header)"
+  },
+  {
+    "lane": "lane-0",
+    "sha": "20445cca",
+    "risk": "normal",
+    "verdict": "keep",
+    "disposition": "included",
+    "author": "not factory output (before the loop started at 19:49Z, or a hand fix)",
+    "subject": "relay: test the chat:relay-result payload (the source grep matched an unrelated clientId spread)"
+  },
+  {
+    "lane": "lane-0",
+    "sha": "23988442",
+    "risk": "normal",
+    "verdict": "keep",
+    "disposition": "included",
+    "author": "not factory output (before the loop started at 19:49Z, or a hand fix)",
+    "subject": "recap: render the stream recap card from a pure module (the test used to eval a slice of app.js)"
+  },
+  {
+    "lane": "lane-0",
+    "sha": "b0afa352",
+    "risk": "normal",
+    "verdict": "drop",
+    "disposition": "dropped in review",
+    "author": "not factory output (before the loop started at 19:49Z, or a hand fix)",
+    "subject": "share: decide the share button and live flag in share-core (the test grepped app.js for IS_PWA)"
+  },
+  {
+    "lane": "lane-0",
+    "sha": "dc7b1fd6",
+    "risk": "tests",
+    "verdict": "keep",
+    "disposition": "included",
+    "author": "not factory output (before the loop started at 19:49Z, or a hand fix)",
+    "subject": "reply: assert studio-reply-core load order on the script registry (index.html was grepped)"
+  },
+  {
+    "lane": "lane-0",
+    "sha": "4f2ab0dc",
+    "risk": "normal",
+    "verdict": "keep",
+    "disposition": "reverted in integration (broke an admin page test)",
+    "author": "not factory output (before the loop started at 19:49Z, or a hand fix)",
+    "subject": "auth: restore dashboard scroll from a tested module (the template text was the only check)"
+  },
+  {
+    "lane": "lane-0",
+    "sha": "0a45f1b4",
+    "risk": "high",
+    "verdict": "keep",
+    "disposition": "included",
+    "author": "not factory output (before the loop started at 19:49Z, or a hand fix)",
+    "subject": "Security/safety or high-risk change (category-only public record)"
+  },
+  {
+    "lane": "lane-0",
+    "sha": "d22d5771",
+    "risk": "normal",
+    "verdict": "keep",
+    "disposition": "included",
+    "author": "not factory output (before the loop started at 19:49Z, or a hand fix)",
+    "subject": "chat: plan bang-command side effects before any request (app.js was grepped for the rules)"
+  },
+  {
+    "lane": "lane-0",
+    "sha": "90a052bc",
+    "risk": "normal",
+    "verdict": "drop",
+    "disposition": "dropped in review",
+    "author": "not factory output (before the loop started at 19:49Z, or a hand fix)",
+    "subject": "account: paint auth identity before config from a tested choice (app.js call order was grepped)"
+  },
+  {
+    "lane": "lane-0",
+    "sha": "6fe7e57e",
+    "risk": "normal",
+    "verdict": "drop",
+    "disposition": "dropped in review",
+    "author": "not factory output (before the loop started at 19:49Z, or a hand fix)",
+    "subject": "tests: lock overlay asset URLs, snapshot steps, and the dashboard scroll script (deploy coupling)"
+  },
+  {
+    "lane": "lane-0",
+    "sha": "b2d1468d",
+    "risk": "normal",
+    "verdict": "keep",
+    "disposition": "included",
+    "author": "not factory output (before the loop started at 19:49Z, or a hand fix)",
+    "subject": "moderation: cap deleted-message tombstones in the tested core (server dropped an untested half)"
+  },
+  {
+    "lane": "lane-0",
+    "sha": "2eacb93c",
+    "risk": "normal",
+    "verdict": "drop",
+    "disposition": "dropped in review",
+    "author": "not factory output (before the loop started at 19:49Z, or a hand fix)",
+    "subject": "widgets: test that a throwing panel stays unmounted and hidden (it was untested)"
+  },
+  {
+    "lane": "lane-0",
+    "sha": "20283180",
+    "risk": "high",
+    "verdict": "fix",
+    "disposition": "included after fix: 5594945d",
+    "author": "not factory output (before the loop started at 19:49Z, or a hand fix)",
+    "subject": "Security/safety or high-risk change (category-only public record)"
+  },
+  {
+    "lane": "lane-0",
+    "sha": "b9fd7fdd",
+    "risk": "normal",
+    "verdict": "fix",
+    "disposition": "included after fix: 129eb370",
+    "author": "factory (grok-4.7)",
+    "subject": "landing: test the hero picker by running it (home.js was eval'd from a source slice)"
+  },
+  {
+    "lane": "lane-0",
+    "sha": "3788dfaf",
+    "risk": "normal",
+    "verdict": "drop",
+    "disposition": "dropped in review",
+    "author": "factory (grok-4.7)",
+    "subject": "moderation: decide surface wiring in the core (server.js was grepped for planDelete)"
+  },
+  {
+    "lane": "lane-0",
+    "sha": "6ac7b25d",
+    "risk": "normal",
+    "verdict": "fix",
+    "disposition": "excluded (factory tooling)",
+    "author": "factory (grok-4.7)",
+    "subject": "factory: serve the improvement board at /factory for admins (localhost was not reachable)"
+  },
+  {
+    "lane": "lane-0",
+    "sha": "b41dad27",
+    "risk": "normal",
+    "verdict": "keep",
+    "disposition": "included",
+    "author": "factory (grok-4.7)",
+    "subject": "quote-game: join the public base in withBase (app.py was grepped for the string)"
+  },
+  {
+    "lane": "lane-0",
+    "sha": "a82627a3",
+    "risk": "normal",
+    "verdict": "fix",
+    "disposition": "included after fix: 4af0e42e",
+    "author": "factory (grok-4.7)",
+    "subject": "hot-or-not: join the public base in withBase (app.py was grepped for the string)"
+  },
+  {
+    "lane": "lane-0",
+    "sha": "ad6a7969",
+    "risk": "high",
+    "verdict": "fix",
+    "disposition": "removed at human sign-off (no user-facing fix; touches the live OBS page)",
+    "author": "factory (grok-4.7)",
+    "subject": "Security/safety or high-risk change (category-only public record)"
+  },
+  {
+    "lane": "lane-0",
+    "sha": "b0780d42",
+    "risk": "normal",
+    "verdict": "drop",
+    "disposition": "dropped in review",
+    "author": "factory (grok-4.7)",
+    "subject": "boot: decide wiring markers in bootWiringFacts (app.js was grepped with match and indexOf)"
+  },
+  {
+    "lane": "lane-0",
+    "sha": "543bb756",
+    "risk": "normal",
+    "verdict": "drop",
+    "disposition": "dropped in review",
+    "author": "factory (grok-4.7)",
+    "subject": "emotes: decide picker chrome in emotePickerChromeFacts (styles.css was grepped)"
+  },
+  {
+    "lane": "lane-0",
+    "sha": "de2f209d",
+    "risk": "normal",
+    "verdict": "drop",
+    "disposition": "dropped in review",
+    "author": "factory (grok-4.7)",
+    "subject": "monitor: decide stack-monitor install in stack_monitor_deployment (unit files were grepped)"
+  },
+  {
+    "lane": "lane-0",
+    "sha": "60bbb204",
+    "risk": "normal",
+    "verdict": "keep",
+    "disposition": "included",
+    "author": "not factory output (before the loop started at 19:49Z, or a hand fix)",
+    "subject": "studio: never read config during the auth paint (boot could throw when auth/status beat bootstrap)"
+  },
+  {
+    "lane": "lane-0",
+    "sha": "a10417a0",
+    "risk": "high",
+    "verdict": "drop",
+    "disposition": "dropped in review",
+    "author": "factory (grok-4.7)",
+    "subject": "Security/safety or high-risk change (category-only public record)"
+  },
+  {
+    "lane": "lane-0",
+    "sha": "746a8bda",
+    "risk": "normal",
+    "verdict": "drop",
+    "disposition": "dropped in review",
+    "author": "factory (grok-4.7)",
+    "subject": "hot-or-not: decide nightly backup coverage in hot_or_not_nightly_backup (backup script was grepped)"
+  },
+  {
+    "lane": "lane-0",
+    "sha": "b55a3bcb",
+    "risk": "normal",
+    "verdict": "drop",
+    "disposition": "dropped in review",
+    "author": "factory (grok-4.7)",
+    "subject": "outage-recovery: decide timer install in outage_recovery_deployment (unit files were grepped)"
+  },
+  {
+    "lane": "lane-0",
+    "sha": "2d8da4be",
+    "risk": "normal",
+    "verdict": "drop",
+    "disposition": "dropped in review",
+    "author": "factory (grok-4.7)",
+    "subject": "audio: decide scenes HITL page wiring in scenes_hitl_page (templates were grepped)"
+  },
+  {
+    "lane": "lane-0",
+    "sha": "bc528706",
+    "risk": "normal",
+    "verdict": "drop",
+    "disposition": "dropped in review",
+    "author": "factory (grok-4.7)",
+    "subject": "asr: decide test-webapp bind and text insertion in asr_test_page (source was grepped)"
+  },
+  {
+    "lane": "lane-0",
+    "sha": "a3ce2712",
+    "risk": "high",
+    "verdict": "drop",
+    "disposition": "dropped in review",
+    "author": "factory (grok-4.7)",
+    "subject": "Security/safety or high-risk change (category-only public record)"
+  },
+  {
+    "lane": "lane-0",
+    "sha": "e6f552b5",
+    "risk": "normal",
+    "verdict": "drop",
+    "disposition": "dropped in review",
+    "author": "factory (grok-4.7)",
+    "subject": "soundboard: decide snapshot SEF upload in soundboard_snapshot_upload (backup script was grepped)"
+  },
+  {
+    "lane": "lane-0",
+    "sha": "374511d1",
+    "risk": "high",
+    "verdict": "drop",
+    "disposition": "dropped in review",
+    "author": "factory (grok-4.7)",
+    "subject": "Security/safety or high-risk change (category-only public record)"
+  },
+  {
+    "lane": "lane-0",
+    "sha": "30021c94",
+    "risk": "normal",
+    "verdict": "keep",
+    "disposition": "included",
+    "author": "factory (grok-4.7)",
+    "subject": "Security/safety or high-risk change (category-only public record)"
+  },
+  {
+    "lane": "lane-0",
+    "sha": "c7788803",
+    "risk": "normal",
+    "verdict": "keep",
+    "disposition": "included",
+    "author": "factory (grok-4.7)",
+    "subject": "rate-limit: do not record a denied attempt (a retry kept the block open)"
+  },
+  {
+    "lane": "lane-0",
+    "sha": "cb5f655d",
+    "risk": "normal",
+    "verdict": "keep",
+    "disposition": "included",
+    "author": "factory (grok-4.7)",
+    "subject": "cookies: keep parsing when one value is not percent-encoded (a bad cookie 500'd auth)"
+  },
+  {
+    "lane": "lane-0",
+    "sha": "29444a5a",
+    "risk": "normal",
+    "verdict": "keep",
+    "disposition": "included",
+    "author": "factory (grok-4.7)",
+    "subject": "Security/safety or high-risk change (category-only public record)"
+  },
+  {
+    "lane": "lane-0",
+    "sha": "2cc86180",
+    "risk": "normal",
+    "verdict": "keep",
+    "disposition": "included",
+    "author": "factory (grok-4.7)",
+    "subject": "Security/safety or high-risk change (category-only public record)"
+  },
+  {
+    "lane": "lane-0",
+    "sha": "e19c378d",
+    "risk": "normal",
+    "verdict": "keep",
+    "disposition": "included",
+    "author": "factory (grok-4.7)",
+    "subject": "chat: drop clipped color codes and blank markup (a cut published hex garbage)"
+  },
+  {
+    "lane": "lane-1",
+    "sha": "4d9f16c6",
+    "risk": "normal",
+    "verdict": "keep",
+    "disposition": "superseded by e19c378d",
+    "author": "factory (grok-4.7)",
+    "subject": "chat: drop length-capped color codes (they leaked hex into the message)"
+  },
+  {
+    "lane": "lane-1",
+    "sha": "909c4e47",
+    "risk": "normal",
+    "verdict": "keep",
+    "disposition": "superseded by e19c378d",
+    "author": "factory (grok-4.7)",
+    "subject": "chat: strip color codes before capping reply quotes (mobile showed the hex)"
+  },
+  {
+    "lane": "lane-1",
+    "sha": "d72f016d",
+    "risk": "normal",
+    "verdict": "keep",
+    "disposition": "included",
+    "author": "factory (grok-4.7)",
+    "subject": "private rooms: stop counting expired invites as active (the card lied)"
+  },
+  {
+    "lane": "lane-1",
+    "sha": "d7dfa5e5",
+    "risk": "normal",
+    "verdict": "keep",
+    "disposition": "superseded by 29444a5a",
+    "author": "factory (grok-4.7)",
+    "subject": "private rooms: stop a max-length slug collision from hanging create (the suffix was sliced off)"
+  },
+  {
+    "lane": "lane-1",
+    "sha": "7f48fdc0",
+    "risk": "normal",
+    "verdict": "keep",
+    "disposition": "included",
+    "author": "factory (grok-4.7)",
+    "subject": "private rooms: reject an unparseable invite expiry instead of 500ing"
+  },
+  {
+    "lane": "lane-2",
+    "sha": "a9c1cca0",
+    "risk": "high",
+    "verdict": "fix",
+    "disposition": "included after fix: 073b8177",
+    "author": "factory (grok-4.7)",
+    "subject": "Security/safety or high-risk change (category-only public record)"
+  },
+  {
+    "lane": "lane-2",
+    "sha": "acbbab57",
+    "risk": "high",
+    "verdict": "fix",
+    "disposition": "included after fix: ordering (parent a9c1cca0 included first)",
+    "author": "factory (grok-4.7)",
+    "subject": "Security/safety or high-risk change (category-only public record)"
+  },
+  {
+    "lane": "lane-2",
+    "sha": "4140c66f",
+    "risk": "high",
+    "verdict": "keep",
+    "disposition": "included",
+    "author": "factory (grok-4.7)",
+    "subject": "Security/safety or high-risk change (category-only public record)"
+  },
+  {
+    "lane": "lane-2",
+    "sha": "f09ef141",
+    "risk": "high",
+    "verdict": "keep",
+    "disposition": "included",
+    "author": "factory (grok-4.7)",
+    "subject": "Security/safety or high-risk change (category-only public record)"
+  },
+  {
+    "lane": "lane-2",
+    "sha": "91e8ac71",
+    "risk": "high",
+    "verdict": "keep",
+    "disposition": "included",
+    "author": "factory (grok-4.7)",
+    "subject": "Security/safety or high-risk change (category-only public record)"
+  },
+  {
+    "lane": "lane-3",
+    "sha": "dcfcd96a",
+    "risk": "normal",
+    "verdict": "keep",
+    "disposition": "included",
+    "author": "factory (grok-4.7)",
+    "subject": "offline queue: queue <@!id> mentions (bang form was dropped)"
+  },
+  {
+    "lane": "lane-3",
+    "sha": "36cdfe39",
+    "risk": "normal",
+    "verdict": "drop",
+    "disposition": "dropped in review",
+    "author": "factory (grok-4.7)",
+    "subject": "db retry: retry SQLITE_LOCKED table locks (message omits \"database is locked\")"
+  },
+  {
+    "lane": "lane-3",
+    "sha": "d9e21c90",
+    "risk": "high",
+    "verdict": "keep",
+    "disposition": "included",
+    "author": "factory (grok-4.7)",
+    "subject": "Security/safety or high-risk change (category-only public record)"
+  },
+  {
+    "lane": "lane-3",
+    "sha": "870fa2c5",
+    "risk": "normal",
+    "verdict": "keep",
+    "disposition": "included",
+    "author": "factory (grok-4.7)",
+    "subject": "traffic alerts: gate property cold-start floor (mature baselines paged forever)"
+  },
+  {
+    "lane": "lane-3",
+    "sha": "e0eae208",
+    "risk": "high",
+    "verdict": "keep",
+    "disposition": "included",
+    "author": "factory (grok-4.7)",
+    "subject": "Security/safety or high-risk change (category-only public record)"
+  },
+  {
+    "lane": "lane-3",
+    "sha": "c1053815",
+    "risk": "high",
+    "verdict": "keep",
+    "disposition": "included",
+    "author": "factory (grok-4.7)",
+    "subject": "Security/safety or high-risk change (category-only public record)"
+  },
+  {
+    "lane": "lane-3",
+    "sha": "dff6bd66",
+    "risk": "normal",
+    "verdict": "keep",
+    "disposition": "included",
+    "author": "factory (grok-4.7)",
+    "subject": "Security/safety or high-risk change (category-only public record)"
+  },
+  {
+    "lane": "lane-3",
+    "sha": "e2a4fc8a",
+    "risk": "normal",
+    "verdict": "keep",
+    "disposition": "included",
+    "author": "factory (grok-4.7)",
+    "subject": "Security/safety or high-risk change (category-only public record)"
+  },
+  {
+    "lane": "lane-3",
+    "sha": "c98b40aa",
+    "risk": "normal",
+    "verdict": "fix",
+    "disposition": "included after fix: 9f4c0270",
+    "author": "factory (grok-4.7)",
+    "subject": "Security/safety or high-risk change (category-only public record)"
+  },
+  {
+    "lane": "lane-3",
+    "sha": "c34e834d",
+    "risk": "high",
+    "verdict": "keep",
+    "disposition": "included",
+    "author": "factory (grok-4.7)",
+    "subject": "Security/safety or high-risk change (category-only public record)"
+  },
+  {
+    "lane": "lane-3",
+    "sha": "f1ee4a1c",
+    "risk": "normal",
+    "verdict": "keep",
+    "disposition": "included",
+    "author": "factory (grok-4.7)",
+    "subject": "Security/safety or high-risk change (category-only public record)"
+  },
+  {
+    "lane": "lane-3",
+    "sha": "3a09bd45",
+    "risk": "high",
+    "verdict": "keep",
+    "disposition": "included",
+    "author": "factory (grok-4.7)",
+    "subject": "Security/safety or high-risk change (category-only public record)"
+  },
+  {
+    "lane": "lane-4",
+    "sha": "eaeef7b0",
+    "risk": "normal",
+    "verdict": "keep",
+    "disposition": "included",
+    "author": "factory (grok-4.7)",
+    "subject": "quote_game: reject malformed room settings and guesses (avoid 500s)"
+  },
+  {
+    "lane": "lane-4",
+    "sha": "1b37c058",
+    "risk": "normal",
+    "verdict": "keep",
+    "disposition": "included",
+    "author": "factory (grok-4.7)",
+    "subject": "quote_game: ignore unicode digits on practice routes (avoid 500s)"
+  },
+  {
+    "lane": "lane-4",
+    "sha": "1278aa02",
+    "risk": "normal",
+    "verdict": "keep",
+    "disposition": "included",
+    "author": "factory (grok-4.7)",
+    "subject": "quote_game: drop exclude ids SQLite cannot bind (avoid 500s)"
+  },
+  {
+    "lane": "lane-4",
+    "sha": "f89fc5d4",
+    "risk": "normal",
+    "verdict": "keep",
+    "disposition": "included",
+    "author": "factory (grok-4.7)",
+    "subject": "soundboard: reject page offsets SQLite cannot bind (avoid 500s)"
+  },
+  {
+    "lane": "lane-4",
+    "sha": "44f19c08",
+    "risk": "normal",
+    "verdict": "keep",
+    "disposition": "included",
+    "author": "factory (grok-4.7)",
+    "subject": "tracker: reject list pages SQLite cannot bind (avoid 500s)"
+  },
+  {
+    "lane": "lane-4",
+    "sha": "d3fc3b64",
+    "risk": "normal",
+    "verdict": "keep",
+    "disposition": "included",
+    "author": "factory (grok-4.7)",
+    "subject": "vision: let owners reopen archived collections (mine links 404'd)"
+  },
+  {
+    "lane": "lane-4",
+    "sha": "b9b34c0f",
+    "risk": "normal",
+    "verdict": "keep",
+    "disposition": "included",
+    "author": "factory (grok-4.7)",
+    "subject": "Security/safety or high-risk change (category-only public record)"
+  },
+  {
+    "lane": "lane-4",
+    "sha": "4fac3ad3",
+    "risk": "normal",
+    "verdict": "keep",
+    "disposition": "included",
+    "author": "factory (grok-4.7)",
+    "subject": "Security/safety or high-risk change (category-only public record)"
+  },
+  {
+    "lane": "lane-4",
+    "sha": "88a00ae8",
+    "risk": "normal",
+    "verdict": "keep",
+    "disposition": "included",
+    "author": "factory (grok-4.7)",
+    "subject": "Security/safety or high-risk change (category-only public record)"
+  },
+  {
+    "lane": "lane-4",
+    "sha": "c0fac866",
+    "risk": "normal",
+    "verdict": "keep",
+    "disposition": "included",
+    "author": "factory (grok-4.7)",
+    "subject": "Security/safety or high-risk change (category-only public record)"
+  },
+  {
+    "lane": "lane-4",
+    "sha": "cc7c01e3",
+    "risk": "normal",
+    "verdict": "keep",
+    "disposition": "included",
+    "author": "factory (grok-4.7)",
+    "subject": "vision: hide archived collections from photo uploads (replies confirmed the slug)"
+  },
+  {
+    "lane": "lane-4",
+    "sha": "7912c0f2",
+    "risk": "normal",
+    "verdict": "keep",
+    "disposition": "included",
+    "author": "factory (grok-4.7)",
+    "subject": "vision: hide archived collections from manage requests (403 confirmed the slug)"
+  },
+  {
+    "lane": "lane-5",
+    "sha": "cab51c3b",
+    "risk": "normal",
+    "verdict": "keep",
+    "disposition": "included",
+    "author": "factory (grok-4.7)",
+    "subject": "threads: keep fractional message page cursors (truncation skipped turns)"
+  },
+  {
+    "lane": "lane-5",
+    "sha": "5a126be1",
+    "risk": "normal",
+    "verdict": "keep",
+    "disposition": "included",
+    "author": "factory (grok-4.7)",
+    "subject": "threads: stabilize user message ids across restarts (hash() was salted)"
+  },
+  {
+    "lane": "lane-5",
+    "sha": "f9b69fb6",
+    "risk": "normal",
+    "verdict": "keep",
+    "disposition": "included",
+    "author": "factory (grok-4.7)",
+    "subject": "Security/safety or high-risk change (category-only public record)"
+  },
+  {
+    "lane": "lane-5",
+    "sha": "77106044",
+    "risk": "normal",
+    "verdict": "keep",
+    "disposition": "included",
+    "author": "factory (grok-4.7)",
+    "subject": "nx: reject blank bundle names (whitespace was stored as untitled)"
+  },
+  {
+    "lane": "lane-5",
+    "sha": "b3e67052",
+    "risk": "normal",
+    "verdict": "keep",
+    "disposition": "included",
+    "author": "factory (grok-4.7)",
+    "subject": "spum-router: accept scores timed in raw seconds (rounded millis rejected real runs)"
+  },
+  {
+    "lane": "lane-5",
+    "sha": "ae9f618d",
+    "risk": "normal",
+    "verdict": "keep",
+    "disposition": "included",
+    "author": "factory (grok-4.7)",
+    "subject": "Security/safety or high-risk change (category-only public record)"
+  },
+  {
+    "lane": "lane-5",
+    "sha": "ec41b773",
+    "risk": "normal",
+    "verdict": "keep",
+    "disposition": "included",
+    "author": "factory (grok-4.7)",
+    "subject": "Security/safety or high-risk change (category-only public record)"
+  },
+  {
+    "lane": "lane-5",
+    "sha": "a6f2b1a4",
+    "risk": "normal",
+    "verdict": "keep",
+    "disposition": "included",
+    "author": "factory (grok-4.7)",
+    "subject": "nx: reject blank chat prompts (whitespace started a rewrite)"
+  },
+  {
+    "lane": "lane-5",
+    "sha": "37ce2bb2",
+    "risk": "normal",
+    "verdict": "keep",
+    "disposition": "included",
+    "author": "factory (grok-4.7)",
+    "subject": "threads: keep same-timestamp turns on a message page (exclusive cursor skipped them)"
+  },
+  {
+    "lane": "lane-5",
+    "sha": "3f97c164",
+    "risk": "normal",
+    "verdict": "drop",
+    "disposition": "dropped in review",
+    "author": "factory (grok-4.7)",
+    "subject": "studio: return 400 for invalid agent-room proposals (429 retried them)"
+  },
+  {
+    "lane": "lane-5",
+    "sha": "41df532c",
+    "risk": "normal",
+    "verdict": "keep",
+    "disposition": "included",
+    "author": "factory (grok-4.7)",
+    "subject": "threads: reject blank http messages (socket already refused them)"
+  },
+  {
+    "lane": "lane-5",
+    "sha": "0a343c1c",
+    "risk": "normal",
+    "verdict": "keep",
+    "disposition": "included",
+    "author": "factory (grok-4.7)",
+    "subject": "reports: reject blank resolutions (whitespace closed the report)"
+  },
+  {
+    "lane": "lane-6",
+    "sha": "40e7958b",
+    "risk": "normal",
+    "verdict": "keep",
+    "disposition": "included",
+    "author": "factory (grok-4.7)",
+    "subject": "studio chat: ignore events from a replaced socket (late close dropped the live connection)"
+  },
+  {
+    "lane": "lane-6",
+    "sha": "9f7b7de8",
+    "risk": "normal",
+    "verdict": "fix",
+    "disposition": "included after fix: fd50af48 (same lane)",
+    "author": "factory (grok-4.7)",
+    "subject": "Security/safety or high-risk change (category-only public record)"
+  },
+  {
+    "lane": "lane-6",
+    "sha": "8c00dfbc",
+    "risk": "normal",
+    "verdict": "fix",
+    "disposition": "included after fix: 3cd88f33 (same lane)",
+    "author": "factory (grok-4.7)",
+    "subject": "agent room: keep proposals single-flight (Enter repeat queued a second copy)"
+  },
+  {
+    "lane": "lane-6",
+    "sha": "5899ef37",
+    "risk": "normal",
+    "verdict": "keep",
+    "disposition": "included",
+    "author": "factory (grok-4.7)",
+    "subject": "presence: keep the richer chatter when web and phone collapse (relay heartbeat wiped name and avatar)"
+  },
+  {
+    "lane": "lane-6",
+    "sha": "a5eead9a",
+    "risk": "normal",
+    "verdict": "keep",
+    "disposition": "included",
+    "author": "factory (grok-4.7)",
+    "subject": "agent room: keep the throbber on the latest phase (elapsed tick restored the first snapshot)"
+  },
+  {
+    "lane": "lane-6",
+    "sha": "fd50af48",
+    "risk": "normal",
+    "verdict": "keep",
+    "disposition": "included",
+    "author": "factory (grok-4.7)",
+    "subject": "Security/safety or high-risk change (category-only public record)"
+  },
+  {
+    "lane": "lane-6",
+    "sha": "a21f07b8",
+    "risk": "normal",
+    "verdict": "keep",
+    "disposition": "included",
+    "author": "factory (grok-4.7)",
+    "subject": "share: keep emoji whole when a title is truncated (slice split the surrogate pair)"
+  },
+  {
+    "lane": "lane-6",
+    "sha": "3cd88f33",
+    "risk": "normal",
+    "verdict": "keep",
+    "disposition": "included",
+    "author": "factory (grok-4.7)",
+    "subject": "agent room: unlock a propose when the socket drops (ack never arrives, composer stayed disabled)"
+  },
+  {
+    "lane": "lane-7",
+    "sha": "ce0864cd",
+    "risk": "normal",
+    "verdict": "keep",
+    "disposition": "included",
+    "author": "factory (grok-4.7)",
+    "subject": "stream-memory: hold the cursor below undigested speech (budget and LLM errors skipped rows)"
+  },
+  {
+    "lane": "lane-7",
+    "sha": "6c8fe3ff",
+    "risk": "normal",
+    "verdict": "fix",
+    "disposition": "included after fix: f4788a68",
+    "author": "factory (grok-4.7)",
+    "subject": "stream-memory: keep over-cap rows behind the cursor (tail trim skipped the head)"
+  },
+  {
+    "lane": "lane-7",
+    "sha": "95f81374",
+    "risk": "high",
+    "verdict": "keep",
+    "disposition": "included",
+    "author": "factory (grok-4.7)",
+    "subject": "Security/safety or high-risk change (category-only public record)"
+  },
+  {
+    "lane": "lane-7",
+    "sha": "034c24d2",
+    "risk": "high",
+    "verdict": "keep",
+    "disposition": "included",
+    "author": "factory (grok-4.7)",
+    "subject": "Security/safety or high-risk change (category-only public record)"
+  },
+  {
+    "lane": "lane-7",
+    "sha": "0e700d93",
+    "risk": "normal",
+    "verdict": "keep",
+    "disposition": "included",
+    "author": "factory (grok-4.7)",
+    "subject": "live-watch: keep a poll error when no state row exists (first failure looked unchecked)"
+  },
+  {
+    "lane": "lane-7",
+    "sha": "06365d18",
+    "risk": "high",
+    "verdict": "fix",
+    "disposition": "removed at human sign-off (partial fix: Discord tips still scan chat history)",
+    "author": "factory (grok-4.7)",
+    "subject": "Security/safety or high-risk change (category-only public record)"
+  },
+  {
+    "lane": "lane-7",
+    "sha": "34db1928",
+    "risk": "high",
+    "verdict": "keep",
+    "disposition": "included",
+    "author": "factory (grok-4.7)",
+    "subject": "Security/safety or high-risk change (category-only public record)"
+  },
+  {
+    "lane": "lane-8",
+    "sha": "15b9ef51",
+    "risk": "high",
+    "verdict": "keep",
+    "disposition": "included",
+    "author": "factory (grok-4.7)",
+    "subject": "Security/safety or high-risk change (category-only public record)"
+  },
+  {
+    "lane": "lane-8",
+    "sha": "6482b0b0",
+    "risk": "normal",
+    "verdict": "fix",
+    "disposition": "included after fix: a2733a6f",
+    "author": "factory (grok-4.7)",
+    "subject": "clipper: follow replay-chat cursors (offset step skipped the rest of a busy second)"
+  },
+  {
+    "lane": "lane-8",
+    "sha": "69a06130",
+    "risk": "high",
+    "verdict": "keep",
+    "disposition": "included",
+    "author": "factory (grok-4.7)",
+    "subject": "Security/safety or high-risk change (category-only public record)"
+  },
+  {
+    "lane": "lane-8",
+    "sha": "a34be77d",
+    "risk": "high",
+    "verdict": "keep",
+    "disposition": "removed at human sign-off (no real producer sends the bad input)",
+    "author": "factory (grok-4.7)",
+    "subject": "Security/safety or high-risk change (category-only public record)"
+  },
+  {
+    "lane": "lane-8",
+    "sha": "981b9a38",
+    "risk": "normal",
+    "verdict": "keep",
+    "disposition": "included",
+    "author": "factory (grok-4.7)",
+    "subject": "stream daemon: keep chat buffering after a bad inbox row (null username killed the listener)"
+  },
+  {
+    "lane": "lane-8",
+    "sha": "e6d317d3",
+    "risk": "high",
+    "verdict": "keep",
+    "disposition": "included",
+    "author": "factory (grok-4.7)",
+    "subject": "Security/safety or high-risk change (category-only public record)"
+  },
+  {
+    "lane": "lane-8",
+    "sha": "7b62ec08",
+    "risk": "high",
+    "verdict": "keep",
+    "disposition": "included",
+    "author": "factory (grok-4.7)",
+    "subject": "Security/safety or high-risk change (category-only public record)"
+  },
+  {
+    "lane": "lane-8",
+    "sha": "9151514d",
+    "risk": "high",
+    "verdict": "keep",
+    "disposition": "included",
+    "author": "factory (grok-4.7)",
+    "subject": "Security/safety or high-risk change (category-only public record)"
+  },
+  {
+    "lane": "lane-9",
+    "sha": "bc711bb7",
+    "risk": "normal",
+    "verdict": "keep",
+    "disposition": "included",
+    "author": "factory (grok-4.7)",
+    "subject": "Security/safety or high-risk change (category-only public record)"
+  },
+  {
+    "lane": "lane-9",
+    "sha": "7eff7348",
+    "risk": "normal",
+    "verdict": "keep",
+    "disposition": "included",
+    "author": "factory (grok-4.7)",
+    "subject": "audio: do not resurrect a discarded generation (late mark_ready)"
+  },
+  {
+    "lane": "lane-9",
+    "sha": "da86f216",
+    "risk": "normal",
+    "verdict": "keep",
+    "disposition": "included",
+    "author": "factory (grok-4.7)",
+    "subject": "hot_or_not: return skipped room photos to the pack (a skip is not a played round)"
+  },
+  {
+    "lane": "lane-9",
+    "sha": "8546101a",
+    "risk": "normal",
+    "verdict": "keep",
+    "disposition": "included",
+    "author": "factory (grok-4.7)",
+    "subject": "Security/safety or high-risk change (category-only public record)"
+  },
+  {
+    "lane": "lane-9",
+    "sha": "757a9b6d",
+    "risk": "normal",
+    "verdict": "keep",
+    "disposition": "included",
+    "author": "factory (grok-4.7)",
+    "subject": "soundboard: keep a taken-down upload's file when the last active copy is deleted (restore would 404)"
+  },
+  {
+    "lane": "lane-9",
+    "sha": "22da1505",
+    "risk": "normal",
+    "verdict": "keep",
+    "disposition": "included",
+    "author": "factory (grok-4.7)",
+    "subject": "hot_or_not: keep finished More Takes when a late failure arrives (slots 2 and 3 were deleted anyway)"
+  },
+  {
+    "lane": "lane-10",
+    "sha": "34056160",
+    "risk": "normal",
+    "verdict": "keep",
+    "disposition": "included",
+    "author": "factory (grok-4.7)",
+    "subject": "messenger: refuse re-invite of a joined member (role rewrite)"
+  },
+  {
+    "lane": "lane-10",
+    "sha": "65757d89",
+    "risk": "normal",
+    "verdict": "keep",
+    "disposition": "included",
+    "author": "factory (grok-4.7)",
+    "subject": "Security/safety or high-risk change (category-only public record)"
+  },
+  {
+    "lane": "lane-10",
+    "sha": "502bd15d",
+    "risk": "normal",
+    "verdict": "keep",
+    "disposition": "included",
+    "author": "factory (grok-4.7)",
+    "subject": "Security/safety or high-risk change (category-only public record)"
+  },
+  {
+    "lane": "lane-10",
+    "sha": "98fc1472",
+    "risk": "normal",
+    "verdict": "fix",
+    "disposition": "included after fix: e62c2025",
+    "author": "factory (grok-4.7)",
+    "subject": "Security/safety or high-risk change (category-only public record)"
+  },
+  {
+    "lane": "lane-10",
+    "sha": "8aaa7014",
+    "risk": "normal",
+    "verdict": "keep",
+    "disposition": "included",
+    "author": "factory (grok-4.7)",
+    "subject": "Security/safety or high-risk change (category-only public record)"
+  },
+  {
+    "lane": "lane-10",
+    "sha": "1a88e2e9",
+    "risk": "normal",
+    "verdict": "keep",
+    "disposition": "included",
+    "author": "factory (grok-4.7)",
+    "subject": "Security/safety or high-risk change (category-only public record)"
+  },
+  {
+    "lane": "lane-10",
+    "sha": "9224ca1a",
+    "risk": "normal",
+    "verdict": "keep",
+    "disposition": "included",
+    "author": "factory (grok-4.7)",
+    "subject": "Security/safety or high-risk change (category-only public record)"
+  },
+  {
+    "lane": "lane-11",
+    "sha": "478f7508",
+    "risk": "normal",
+    "verdict": "drop",
+    "disposition": "dropped in review",
+    "author": "factory (grok-4.7)",
+    "subject": "studio bridge: retry rate-limited Twitch relays on replay"
+  },
+  {
+    "lane": "lane-11",
+    "sha": "d774dd50",
+    "risk": "normal",
+    "verdict": "keep",
+    "disposition": "included",
+    "author": "factory (grok-4.7)",
+    "subject": "studio db: reject older go-live noto claims (stale edge overwrote the live session)"
+  },
+  {
+    "lane": "lane-11",
+    "sha": "88ceaadf",
+    "risk": "normal",
+    "verdict": "keep",
+    "disposition": "included",
+    "author": "factory (grok-4.7)",
+    "subject": "Security/safety or high-risk change (category-only public record)"
+  },
+  {
+    "lane": "lane-11",
+    "sha": "1b19fc3c",
+    "risk": "normal",
+    "verdict": "keep",
+    "disposition": "included",
+    "author": "factory (grok-4.7)",
+    "subject": "studio nx: drop hermes edits cancelled mid-run (cancel still published the revision)"
+  },
+  {
+    "lane": "lane-11",
+    "sha": "802cdf14",
+    "risk": "normal",
+    "verdict": "keep",
+    "disposition": "included",
+    "author": "factory (grok-4.7)",
+    "subject": "studio db: ignore older chat reaction snapshots (replay rewound emote counts)"
+  },
+  {
+    "lane": "lane-11",
+    "sha": "cfd77296",
+    "risk": "normal",
+    "verdict": "keep",
+    "disposition": "included",
+    "author": "factory (grok-4.7)",
+    "subject": "studio cli: list streamers by numeric twitch id (rename hid the channel)"
+  },
+  {
+    "lane": "lane-11",
+    "sha": "c4d092ec",
+    "risk": "normal",
+    "verdict": "keep",
+    "disposition": "included",
+    "author": "factory (grok-4.7)",
+    "subject": "studio db: scope chat replay to the current session (wrong clock key)"
+  },
+  {
+    "lane": "lane-12",
+    "sha": "145331c4",
+    "risk": "normal",
+    "verdict": "keep",
+    "disposition": "included",
+    "author": "factory (grok-4.7)",
+    "subject": "tracker: resolve reused Twitch logins to the latest channel (login is not identity)"
+  },
+  {
+    "lane": "lane-12",
+    "sha": "6f807293",
+    "risk": "normal",
+    "verdict": "keep",
+    "disposition": "included",
+    "author": "factory (grok-4.7)",
+    "subject": "community: resolve reused Twitch logins to the latest channel (login is not identity)"
+  },
+  {
+    "lane": "lane-12",
+    "sha": "2be5c789",
+    "risk": "normal",
+    "verdict": "keep",
+    "disposition": "included",
+    "author": "factory (grok-4.7)",
+    "subject": "tracker: keep numeric Twitch ids when a login is reused (canonical pages followed the alias)"
+  },
+  {
+    "lane": "lane-12",
+    "sha": "51a3aff8",
+    "risk": "normal",
+    "verdict": "keep",
+    "disposition": "included",
+    "author": "factory (grok-4.7)",
+    "subject": "tracker: keep numeric Kick ids when a slug is reused (canonical pages followed the alias)"
+  },
+  {
+    "lane": "lane-12",
+    "sha": "eab238c6",
+    "risk": "normal",
+    "verdict": "keep",
+    "disposition": "included",
+    "author": "factory (grok-4.7)",
+    "subject": "tracker: pin search hits to numeric ids when an alias is reused (login is not identity)"
+  },
+  {
+    "lane": "lane-12",
+    "sha": "138353ac",
+    "risk": "normal",
+    "verdict": "keep",
+    "disposition": "included",
+    "author": "factory (grok-4.7)",
+    "subject": "tracker: page past a full rankings cache instead of skipping rows (lookahead is not the last page)"
+  },
+  {
+    "lane": "lane-12",
+    "sha": "6208b680",
+    "risk": "normal",
+    "verdict": "keep",
+    "disposition": "included",
+    "author": "factory (grok-4.7)",
+    "subject": "tracker: rank unknown followers behind a real zero (pages follow the cache)"
+  },
+  {
+    "lane": "lane-13",
+    "sha": "64cb5f5b",
+    "risk": "normal",
+    "verdict": "keep",
+    "disposition": "included",
+    "author": "factory (grok-4.7)",
+    "subject": "sound_library: scale kHz note suffixes (2khz parsed as 2 Hz and bare hz crashed)"
+  },
+  {
+    "lane": "lane-13",
+    "sha": "981182ea",
+    "risk": "normal",
+    "verdict": "keep",
+    "disposition": "included",
+    "author": "factory (grok-4.7)",
+    "subject": "ytdownloader: parse Imgur ids after tag routes (prefix was used as the id)"
+  },
+  {
+    "lane": "lane-13",
+    "sha": "12fc12a2",
+    "risk": "normal",
+    "verdict": "keep",
+    "disposition": "included",
+    "author": "factory (grok-4.7)",
+    "subject": "ytdownloader: download direct Imgur mp4 and gifv (image gate rejected them)"
+  },
+  {
+    "lane": "lane-13",
+    "sha": "7cd5e02c",
+    "risk": "normal",
+    "verdict": "keep",
+    "disposition": "included",
+    "author": "factory (grok-4.7)",
+    "subject": "sound_library: parse A440 as concert pitch (octave 440 silenced the render)"
+  },
+  {
+    "lane": "lane-13",
+    "sha": "922321f4",
+    "risk": "normal",
+    "verdict": "keep",
+    "disposition": "included",
+    "author": "factory (grok-4.7)",
+    "subject": "sound_library: parse timing unit suffixes (bare float crashed the render)"
+  },
+  {
+    "lane": "lane-13",
+    "sha": "1b1cfd2c",
+    "risk": "normal",
+    "verdict": "keep",
+    "disposition": "included",
+    "author": "factory (grok-4.7)",
+    "subject": "clipper: accept mobile Twitch VOD URLs (m.twitch.tv was rejected)"
+  },
+  {
+    "lane": "lane-14",
+    "sha": "cccb5054",
+    "risk": "tests",
+    "verdict": "keep",
+    "disposition": "included",
+    "author": "factory (grok-4.7)",
+    "subject": "tos-filter: pin letters-only stem hits (spaces were joining ordinary words)"
+  },
+  {
+    "lane": "lane-14",
+    "sha": "455ab45d",
+    "risk": "tests",
+    "verdict": "keep",
+    "disposition": "included",
+    "author": "factory (grok-4.7)",
+    "subject": "tos-filter: pin l33t stems glued to the next word (digits never reach the stem scan)"
+  },
+  {
+    "lane": "lane-14",
+    "sha": "877595d2",
+    "risk": "tests",
+    "verdict": "keep",
+    "disposition": "included",
+    "author": "factory (grok-4.7)",
+    "subject": "tos-filter: pin slash form of the 14/88 hate code (regex only allows whitespace)"
+  },
+  {
+    "lane": "lane-14",
+    "sha": "d48f8533",
+    "risk": "tests",
+    "verdict": "keep",
+    "disposition": "included",
+    "author": "factory (grok-4.7)",
+    "subject": "tos-filter: pin dot, underscore, and slash forms of preteen and underage (separator class is only hyphen or space)"
+  },
+  {
+    "lane": "lane-14",
+    "sha": "48c97251",
+    "risk": "tests",
+    "verdict": "keep",
+    "disposition": "included",
+    "author": "factory (grok-4.7)",
+    "subject": "tos-filter: pin hyphen and slash forms of numeric age phrases (age rules only accept whitespace)"
+  },
+  {
+    "lane": "lane-14",
+    "sha": "f92788cd",
+    "risk": "tests",
+    "verdict": "keep",
+    "disposition": "included",
+    "author": "factory (grok-4.7)",
+    "subject": "tos-filter: pin determiner forms of minor-plus-clothing phrases (in+garment allows no word between)"
+  },
+  {
+    "lane": "lane-14",
+    "sha": "e0e629c1",
+    "risk": "tests",
+    "verdict": "keep",
+    "disposition": "included",
+    "author": "factory (grok-4.7)",
+    "subject": "tos-filter: pin plural forms of sexualized-minor phrases (minor-word list is singular only)"
+  }
+]
