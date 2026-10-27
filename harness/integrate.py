@@ -118,7 +118,6 @@ def full_suite_delta(master: str) -> dict:
 
 
 PICKED_FROM = re.compile(r"\(cherry picked from commit ([0-9a-f]{40})\)")
-FIRST_BAD = re.compile(r"^([0-9a-f]{40}) is the first bad commit", re.M)
 MAX_BISECTS = 3
 
 
@@ -137,13 +136,15 @@ def bisect(test: str) -> str | None:
     head = git(CHECKOUT, "rev-parse", "HEAD").stdout.strip()
     git(CHECKOUT, "bisect", "reset")
     git(CHECKOUT, "bisect", "start", head, C.MASTER)
-    out = git(CHECKOUT, "bisect", "run", "sh", "-c", test_command(test), timeout=1800).stdout
+    result = git(CHECKOUT, "bisect", "run", "sh", "-c", test_command(test), timeout=1800)
+    # Read Git's result ref rather than parsing version-dependent console text.
+    bad = git(CHECKOUT, "rev-parse", "--verify", "refs/bisect/bad").stdout.strip() if result.returncode == 0 else ""
     git(CHECKOUT, "bisect", "reset")
     git(CHECKOUT, "checkout", "--force", "--detach", head)
-    match = FIRST_BAD.search(out)
-    if not match:
+    if not re.fullmatch(r"[0-9a-f]{40}", bad):
+        print(f"bisect failed for {test}: {result.stdout}\n{result.stderr}", file=sys.stderr)
         return None
-    message = git(CHECKOUT, "show", "-s", "--format=%B", match.group(1)).stdout
+    message = git(CHECKOUT, "show", "-s", "--format=%B", bad).stdout
     origin = PICKED_FROM.search(message)
     return origin.group(1) if origin else None
 
