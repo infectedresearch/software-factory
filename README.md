@@ -30,6 +30,28 @@ The 77-fix and 98-hour figures are model judgments, not independent measurements
 The cost is a frozen accounting snapshot, not the complete cost of later remediation, publication,
 infrastructure, or human time. Tokens include cache reads, not 848 million newly generated tokens.
 
+## Round 2: Show Your Work (FL-TR-2026-03)
+
+[Read the draft](https://fracktron.com/research/show-your-work/) · [PDF](https://fracktron.com/research/show-your-work/show-your-work-draft-report.pdf) · `research/round2/`
+
+A second night on the same codebase. Every commit had to carry a `Proof:` line naming a test that fails
+before the change and passes after; an AI reviewer judged each commit as it landed; half the lanes built
+task cards written by a read-only scout. Everything that survived was merged, tested and deployed.
+
+| Round 1 → round 2 | |
+|---|---:|
+| Real bug fixes merged | 77 → 105 |
+| Minor share of merged commits | 18% → 8% |
+| Survived review, of gate-passed commits | 89% → 95% |
+| Tokens per real fix, list price | $5.32 → $5.22 |
+| Free vs scout-directed lanes, cost per non-minor merged commit | $4.18 vs $4.27 (pre-registered threshold 30%) |
+
+Round 2 harness additions: `harness/cards.py` (scout and card queue), `harness/fixture.py`
+(sanitized config for test checkouts), `harness/round2.py` (arm setup), and the proof gate, inline
+review, leftover patches and synchronized-failure detector in `gate.py`, `loop.sh` and `prompt.md`.
+`python3 verify_round2.py` recomputes the round 2 headline numbers from `research/round2/data.json`.
+The round 2 scripts document the method; they read private run state and do not run here.
+
 ## What's here
 
 - `harness/`: the actual factory orchestration, regression-relative gate, review prompts,
@@ -51,6 +73,7 @@ Requires Python 3.11+, Node.js 20+, Git, and `uv` for the factory test runner.
 
 ```sh
 python3 verify.py
+python3 verify_round2.py
 python3 research/build.py
 uv run --with pytest pytest -q harness/tests
 ```

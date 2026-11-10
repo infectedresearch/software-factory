@@ -98,13 +98,25 @@ def _repo(tmp_path: Path) -> Path:
     return repo
 
 
-def _commit(repo: Path, rel: str, text: str, message: str) -> str:
+def _commit(repo: Path, rel: str, text: str, message: str, proof: str | None = "Proof: node --test") -> str:
     path = repo / rel
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(text)
     _git(repo, "add", rel)
-    _git(repo, "commit", "-q", "-m", message)
+    _git(repo, "commit", "-q", "-m", message if proof is None else f"{message}\n\n{proof}")
     return _git(repo, "rev-parse", "HEAD")
+
+
+def test_gate_rejects_a_commit_without_a_proof_line(tmp_path, monkeypatch):
+    repo = _repo(tmp_path)
+    base = _commit(repo, "README", "x\n", "base")
+    monkeypatch.setattr(C, "SCRATCH", tmp_path / "scratch")
+    unproven = _commit(repo, "lib/a.js", "const a = 1;\n", "lib: tidy", proof=None)
+    report = gate.gate(repo, base)
+    assert report["passed"] is False
+    assert any("Proof:" in r and unproven[:8] in r for r in report["reasons"])
+    _commit(repo, "lib/b.js", "const b = 1;\n", "lib: b", proof="Proof: lib/b.test.js fails before, passes after")
+    assert gate.commits_without_proof(repo, unproven) == []
 
 
 PASSING = "require('node:test')('ok', () => {});\n"

@@ -8,7 +8,9 @@ processes over disjoint file groups do not have that problem.
 from __future__ import annotations
 
 import re
+import os
 import subprocess
+import fixture
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
@@ -30,6 +32,7 @@ def _run(repo: Path, files: list[str], timeout: int) -> tuple[int, list[str], st
         proc = subprocess.run(
             ["uv", "run", "pytest", "-q", "-rfE", "-p", "no:cacheprovider", *files],
             cwd=repo, capture_output=True, text=True, timeout=timeout, check=False,
+            env={**os.environ, **fixture.ENV},
         )
     except subprocess.TimeoutExpired:
         return 124, [f"<timed out: {files[0]} and {len(files) - 1} more>"], ""

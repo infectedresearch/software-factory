@@ -15,5 +15,6 @@ jobs:
           node-version: '22'
       - run: python -m pip install uv
       - run: python verify.py
+      - run: python verify_round2.py
       - run: python research/build.py
       - run: uv run --with pytest pytest -q harness/tests

@@ -23,6 +23,7 @@ from __future__ import annotations
 import argparse
 import ast
 import json
+import os
 import re
 import subprocess
 import sys
@@ -30,6 +31,7 @@ import time
 from pathlib import Path
 
 import config as C
+import fixture
 
 PYTEST_CAP = 60
 CORE_PYTESTS = (
@@ -46,7 +48,8 @@ SKIP_NODE_CHECK = re.compile(r"(\.min\.js$|-vendor\.js$|/frackworld\.js$|/node_m
 
 def run(cmd: list[str], cwd: Path, timeout: int = 900) -> subprocess.CompletedProcess[str]:
     try:
-        return subprocess.run(cmd, cwd=cwd, capture_output=True, text=True, timeout=timeout)
+        return subprocess.run(cmd, cwd=cwd, capture_output=True, text=True, timeout=timeout,
+                              env={**os.environ, **fixture.ENV})
     except subprocess.TimeoutExpired as exc:
         out = (exc.stdout or "") if isinstance(exc.stdout, str) else ""
         return subprocess.CompletedProcess(cmd, 124, out, f"timed out after {timeout}s")
@@ -118,6 +121,17 @@ def baseline_growth(repo: Path, base: str) -> list[str]:
     except OSError:
         return []
     return sorted(after - before)
+
+
+def commits_without_proof(repo: Path, base: str) -> list[str]:
+    """Every new commit must say how it was proven; the reviewer runs that proof."""
+    out = []
+    shas = git(repo, "rev-list", "--reverse", f"{base}..HEAD").split()
+    for sha in shas:
+        body = git(repo, "show", "-s", "--format=%B", sha)
+        if not re.search(r"^Proof:\s*\S", body, re.M):
+            out.append(sha[:8])
+    return out
 
 
 def related_pytests(repo: Path, paths: list[str]) -> list[str]:
@@ -207,6 +221,7 @@ def scratch_at(repo: Path, sha: str) -> Path:
         run(["git", "worktree", "add", "--detach", str(C.SCRATCH), sha], repo, 300)
     run(["git", "checkout", "--force", "--detach", sha], C.SCRATCH, 300)
     run(["git", "clean", "-fdq", "-e", ".venv"], C.SCRATCH, 300)
+    fixture.install(C.SCRATCH)
     return C.SCRATCH
 
 
@@ -279,6 +294,13 @@ def gate(repo: Path, base: str, audit: bool = False, pytests: bool = True) -> di
     grown = baseline_growth(repo, base)
     if grown:
         report["reasons"].append("Added source-text BASELINE entries: " + ", ".join(grown))
+    if not audit:
+        unproven = commits_without_proof(repo, base)
+        if unproven:
+            report["reasons"].append(
+                "Commit body has no 'Proof:' line naming the failing-then-passing test or the production "
+                "function a new test exercises: " + ", ".join(unproven)
+            )
 
     py = [p for p in live if p.endswith(".py")]
     if py:

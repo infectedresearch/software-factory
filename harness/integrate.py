@@ -25,6 +25,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 import config as C
+import fixture
 import fullsuite
 import picking
 import status
@@ -67,6 +68,7 @@ def prepare(repo: Path) -> None:
     git(CHECKOUT, "cherry-pick", "--abort")
     git(CHECKOUT, "checkout", "--force", "--detach", C.MASTER)
     git(CHECKOUT, "clean", "-fdq")
+    fixture.install(CHECKOUT)
     modules = CHECKOUT / "infra/tv-streamer/node_modules"
     source = C.WORKTREE / "infra/tv-streamer/node_modules"
     if not modules.exists() and source.is_dir():
@@ -97,6 +99,7 @@ def master_failures(master: str) -> list[str]:
         git(C.WORKTREE, "worktree", "add", "--detach", str(BASE_CHECKOUT), C.MASTER)
     git(BASE_CHECKOUT, "checkout", "--force", "--detach", C.MASTER)
     git(BASE_CHECKOUT, "clean", "-fdq")
+    fixture.install(BASE_CHECKOUT)
     failed, _ = fullsuite.run(BASE_CHECKOUT)
     for old in C.STATE.glob("suite-master-*.json"):
         old.unlink(missing_ok=True)
@@ -256,8 +259,9 @@ def main() -> int:
               flush=True)
         if not args.every:
             return 0
-        # One last check after the lanes' end time, then stop.
-        if datetime.now(timezone.utc) >= datetime(2026, 10, 27, 9, 0, tzinfo=timezone.utc):
+        # Keep checking while any lane is still running; one last check after
+        # the last lane stops, then exit.
+        if not any(status.pid_alive(lane.pidfile) for lane in C.lanes()):
             return 0
         time.sleep(args.every)
 

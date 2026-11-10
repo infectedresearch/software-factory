@@ -6,6 +6,9 @@ https://fracktron.com/factory/ to admin sessions only.
 from __future__ import annotations
 
 import json
+import sys
+import subprocess
+import os
 import sqlite3
 import ssl
 import urllib.error
@@ -64,6 +67,59 @@ def cookie(header: str | None, name: str) -> str:
     return ""
 
 
+SCOUT_PID = C.STATE / "cards" / "scout.pid"
+
+
+def scout_running() -> bool:
+    try:
+        pid = int(SCOUT_PID.read_text())
+        os.kill(pid, 0)
+        return True
+    except (OSError, ValueError):
+        return False
+
+
+def cards_overview() -> dict:
+    import cards
+    rows = cards._load()
+    design = C.HOME / "research" / "round2" / "design.json"
+    card_areas = json.loads(design.read_text())["arms"]["cards"]["areas"] if design.is_file() else []
+    return {"cards": rows, "counts": cards.counts(rows), "scout_running": scout_running(), "card_areas": card_areas,
+            "areas": [lane.stem for lane in sorted((C.HOME / "focus").glob("lane-*.md"))]}
+
+
+def cards_decide(payload: dict) -> dict:
+    import cards
+    ids = [int(i) for i in (payload.get("ids") or []) if str(i).isdigit()][:200]
+    state = {"accept": "accepted", "decline": "declined", "undo": "proposed"}.get(str(payload.get("decision")))
+    if not ids or not state:
+        return {"ok": False, "error": "ids and decision (accept/decline/undo) required."}
+    done = cards.decide(ids, state, str(payload.get("note") or "")[:500])
+    return {"ok": True, "changed": [c["id"] for c in done], "counts": cards.counts()}
+
+
+def cards_scout(payload: dict) -> dict:
+    if scout_running():
+        return {"ok": False, "error": "A scout run is already in progress."}
+    areas = str(payload.get("areas") or "")
+    if not areas:
+        # Only the cards arm's areas are built this round; do not spend scout
+        # tokens on the free arm's.
+        design = C.HOME / "research" / "round2" / "design.json"
+        if design.is_file():
+            areas = ",".join(json.loads(design.read_text())["arms"]["cards"]["areas"])
+    per = max(1, min(int(payload.get("per_area") or 6), 12))
+    cmd = [sys.executable, str(C.HOME / "cards.py"), "scout", "--per-area", str(per), "--parallel", "7"]
+    if areas:
+        cmd += ["--areas", areas]
+    SCOUT_PID.parent.mkdir(parents=True, exist_ok=True)
+    log = open(C.STATE / "cards" / "scout-run.log", "ab")
+    proc = subprocess.Popen(cmd, cwd=C.HOME, stdout=log, stderr=subprocess.STDOUT, start_new_session=True,
+                            env={**os.environ, "PWD": str(C.HOME)})
+    SCOUT_PID.write_text(str(proc.pid))
+    return {"ok": True, "pid": proc.pid}
+
+
 def access(user: dict | None) -> str:
     if not user:
         return "login"
@@ -113,6 +169,9 @@ class Handler(BaseHTTPRequestHandler):
         if url.path == "/api/status":
             self._json(status.overview())
             return
+        if url.path == "/api/cards":
+            self._json(cards_overview())
+            return
         if url.path.startswith("/research/"):
             name = url.path.removeprefix("/research/") or "index.html"
             kinds = {".html": "text/html; charset=utf-8", ".svg": "image/svg+xml", ".md": "text/markdown; charset=utf-8", ".pdf": "application/pdf"}
@@ -150,6 +209,7 @@ class Handler(BaseHTTPRequestHandler):
         routes = {
             "/api/stop": lambda: status.request_stop(lane_id or None),
             "/api/start": lambda: status.start_lanes(lane_id or None),
+            "/api/factory": lambda: status.set_factory(bool(payload.get("on"))),
             "/api/model": lambda: status.set_model(str(payload.get("model") or "")),
             "/api/audit": lambda: status.start_audit(lane) if lane else missing(),
             "/api/smart-review": lambda: status.start_smart_review(lane) if lane else missing(),
@@ -158,6 +218,8 @@ class Handler(BaseHTTPRequestHandler):
             "/api/reviewer": lambda: status.set_reviewer(str(payload.get("model") or "")),
             "/api/review/include": lambda: status.include(lane.worktree, sha) if lane else missing(),
             "/api/review/skip": lambda: status.skip(sha),
+            "/api/cards/decide": lambda: cards_decide(payload),
+            "/api/cards/scout": lambda: cards_scout(payload),
         }
         handler = routes.get(urlsplit(self.path).path)
         if handler is None:

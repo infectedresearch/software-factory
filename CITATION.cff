@@ -5,7 +5,15 @@ type: report
 authors:
   - name: "Infected Research / FrackLabs"
 date-released: 2026-10-27
-version: 1.0.0
+version: 1.1.0
 url: "https://fracktron.com/research/software-factory/"
 license: CC-BY-4.0
 abstract: "A preliminary single-codebase field experiment in unattended coding, commit review, regression-relative validation, and production integration."
+references:
+  - type: report
+    title: "Show Your Work: Proof-carrying commits made an unattended coding factory's second night more useful. Task cards made building cheaper, not the night."
+    authors:
+      - name: "Infected Research / FrackLabs"
+    date-released: 2026-11-10
+    url: "https://fracktron.com/research/show-your-work/"
+    notes: "FL-TR-2026-03, draft research report 003"

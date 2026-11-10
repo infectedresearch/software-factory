@@ -57,6 +57,17 @@
   details:first-child > .row { border-top: 0; }
   details > summary { list-style: none; cursor: pointer; }
   details > summary::-webkit-details-marker { display: none; }
+  .tcard { border-top: 1px solid var(--line); padding: 12px 10px; display: grid; grid-template-columns: 1fr auto; gap: 6px 14px; }
+  .tcard.sel { background: var(--raise); border-radius: 10px; }
+  .tcard h3 { margin: 0; font-size: 16px; font-weight: 600; }
+  .tcard .brief { color: var(--text); font-size: 14px; margin: 4px 0; white-space: pre-wrap; }
+  .tcard .proof { color: var(--muted); font-size: 13px; font-family: ui-monospace, monospace; white-space: pre-wrap; }
+  .tcard .files { color: var(--faint); font-size: 12px; }
+  .tcard .acts { display: flex; flex-direction: column; gap: 6px; align-items: stretch; }
+  .cls { font-size: 10px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; padding: 2px 7px; border-radius: 999px; background: var(--raise); }
+  .cls.security-or-safety { color: var(--red); } .cls.user-facing-bug { color: var(--amber); } .cls.reliability { color: var(--blue); } .cls.meaningful-test { color: var(--violet); }
+  .st-accepted { color: var(--green); } .st-declined { color: var(--faint); } .st-assigned { color: var(--amber); } .st-done { color: var(--green); } .st-failed { color: var(--red); }
+  kbd { background: var(--raise); border: 1px solid var(--line); border-radius: 4px; padding: 0 5px; font-size: 12px; }
   .badge { font-size: 11px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; }
   .o-landed { color: var(--green); } .o-rejected, .o-failed { color: var(--red); } .o-running { color: var(--amber); }
   .o-testing { color: var(--blue); } .o-reviewing { color: var(--violet); } .o-dropped { color: var(--red); } .o-needs-fix { color: var(--amber); }
@@ -101,12 +112,14 @@
     <label class="meta"><input type="checkbox" id="inline-review"> review every pass</label>
     <button class="act warn" id="stop-all" type="button">Stop all after their pass</button>
     <button class="act go" id="start-all" type="button">Start stopped lanes</button>
+    <button class="act" id="factory-switch" type="button">Factory: …</button>
   </header>
   <div class="sub">Nothing here is deployed. Each lane commits to its own branch; master changes only when you include a commit.</div>
 
   <nav role="tablist">
     <button role="tab" id="tab-floor" aria-selected="true">Floor</button>
     <button role="tab" id="tab-review" aria-selected="false">Review for master<span class="count" id="review-count">–</span></button>
+    <button role="tab" id="tab-cards" aria-selected="false">Cards<span class="count" id="cards-count">–</span></button>
   </nav>
 
   <main id="floor">
@@ -158,6 +171,23 @@
     <section class="card">
       <h2>Recently included</h2>
       <div id="included" class="meta"></div>
+    </section>
+  </main>
+  <main id="cards" hidden>
+    <section class="card">
+      <h2>Task cards</h2>
+      <p class="meta" style="margin:0">A scout reads one area of the repository and proposes cards. Nothing is built until you <b>accept</b> a card; card lanes then take accepted cards oldest first, one small verified commit each. Keys: <kbd>j</kbd>/<kbd>k</kbd> move, <kbd>a</kbd> accept, <kbd>d</kbd> decline, <kbd>u</kbd> undo.</p>
+      <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+        <button class="act" id="run-scout" type="button">Scout the cards-arm areas for more cards</button>
+        <span class="meta" id="scout-state"></span>
+        <span style="margin-left:auto"></span>
+        <button class="act go small" id="accept-all-visible" type="button">Accept all shown</button>
+        <button class="act warn small" id="decline-all-visible" type="button">Decline all shown</button>
+      </div>
+    </section>
+    <section class="card">
+      <div class="chips" id="card-filters"></div>
+      <div id="card-list" style="margin-top:10px"></div>
     </section>
   </main>
 </div>
@@ -236,6 +266,8 @@ function renderFloor(o) {
   const span = o.run_started && o.until ? o.until - o.run_started : null;
   $("time-fill").style.width = span ? Math.min(100, 100 * used / span) + "%" : "0";
   $("time-text").textContent = o.until ? `Stops by ${clock(o.until)} · ${dur(Math.max(0, o.until - o.now))} left` : "No end time set.";
+  window.__factoryOn = !!o.factory_on;
+  $("factory-switch").textContent = o.factory_on ? "Factory: on" : "Factory: off";
   const c = o.counts || {};
   setHTML($("kpis"), [
     [tok(o.tokens_last_hour), "tokens in the last hour"],
@@ -431,6 +463,11 @@ $("queue").addEventListener("click", async (ev) => {
 
 $("stop-all").onclick = async () => { const r = await post("api/stop", {lane: "all"}); toast(r.ok ? "Every lane will finish its pass, then stop." : r.error, r.ok); refresh(); };
 $("start-all").onclick = async () => { const r = await post("api/start", {lane: "all"}); toast(r.ok ? "Started the stopped lanes." : r.error, r.ok); setTimeout(refresh, 1500); };
+$("factory-switch").onclick = async () => {
+  const r = await post("api/factory", {on: !window.__factoryOn});
+  if (r.ok) { window.__factoryOn = r.on; $("factory-switch").textContent = r.on ? "Factory: on" : "Factory: off"; }
+  toast(r.ok ? (r.on ? "Factory is on." : "Factory is off.") : r.error, r.ok);
+};
 $("model").onchange = async (ev) => { const r = await post("api/model", {model: ev.target.value}); toast(r.ok ? `Each lane's next pass will use ${ev.target.value}.` : r.error, r.ok); };
 $("reviewer").onchange = async (ev) => { const r = await post("api/reviewer", {model: ev.target.value}); toast(r.ok ? `New commits will be reviewed by ${ev.target.value}.` : r.error, r.ok); };
 $("inline-review").onchange = async (ev) => { const r = await post("api/inline-review", {on: ev.target.checked}); toast(r.ok ? (ev.target.checked ? "Every kept pass will be reviewed by the smart model." : "Inline review is off; passes are only tested.") : r.error, r.ok); };
@@ -451,22 +488,81 @@ $("run-audit").onclick = async () => { const r = await post("api/audit", {lane: 
 
 function show(which) {
   tab = which;
-  $("floor").hidden = which !== "floor";
-  $("review").hidden = which !== "review";
-  $("tab-floor").setAttribute("aria-selected", String(which === "floor"));
-  $("tab-review").setAttribute("aria-selected", String(which === "review"));
+  for (const t of ["floor", "review", "cards"]) {
+    $(t).hidden = which !== t;
+    $("tab-" + t).setAttribute("aria-selected", String(which === t));
+  }
   if (which === "review") refreshReview();
-  history.replaceState(null, "", which === "review" ? "#review" : "#");
+  if (which === "cards") refreshCards();
+  history.replaceState(null, "", which === "floor" ? "#" : "#" + which);
 }
 $("tab-floor").onclick = () => show("floor");
 $("tab-review").onclick = () => show("review");
+$("tab-cards").onclick = () => show("cards");
+
+// ---- cards ----
+let cardsData = null, cardFilter = "proposed", cardSel = 0;
+const CARD_STATES = ["proposed", "accepted", "assigned", "done", "failed", "declined"];
+async function refreshCards() {
+  try { cardsData = await (await fetch("api/cards", {cache: "no-store"})).json(); } catch { return; }
+  const c = cardsData.counts || {};
+  $("cards-count").textContent = c.proposed || 0;
+  $("scout-state").textContent = cardsData.scout_running ? "Scout is running; new cards appear here as areas finish." : "";
+  $("run-scout").disabled = !!cardsData.scout_running;
+  $("card-filters").innerHTML = CARD_STATES.map((st) => `<button class="act small" data-f="${st}" aria-pressed="${st === cardFilter}" style="${st === cardFilter ? "border-color:var(--muted)" : ""}">${st}<span class="count">${c[st] || 0}</span></button>`).join("");
+  $("card-filters").querySelectorAll("button").forEach((b) => { b.onclick = () => { cardFilter = b.dataset.f; cardSel = 0; renderCards(); }; });
+  renderCards();
+}
+function visibleCards() { return (cardsData?.cards || []).filter((x) => x.state === cardFilter && (cardFilter !== "proposed" || !cardsData.card_areas?.length || cardsData.card_areas.includes(x.area))).sort((a, b) => a.area.localeCompare(b.area, undefined, {numeric: true}) || a.id - b.id); }
+function renderCards() {
+  const rows = visibleCards();
+  if (cardSel >= rows.length) cardSel = Math.max(0, rows.length - 1);
+  $("card-list").innerHTML = rows.length ? rows.map((x, i) => `
+    <div class="tcard ${i === cardSel ? "sel" : ""}" data-i="${i}" data-id="${x.id}">
+      <div>
+        <div class="meta"><span class="num">#${x.id}</span> <span class="cls ${esc(x.class)}">${esc(x.class)}</span> <span class="num">${esc(x.area)}</span>${cardsData.card_areas?.length && !cardsData.card_areas.includes(x.area) ? ` <span class="st-failed">free-arm area: not built this round</span>` : ""} <span class="st-${esc(x.state)}">${esc(x.state)}</span>${x.lane ? ` <span class="num">${esc(x.lane)}</span>` : ""}${x.sha ? ` <span class="num">${esc(x.sha)}</span>` : ""}</div>
+        <h3>${esc(x.title)}</h3>
+        <div class="brief">${esc(x.brief)}</div>
+        <div class="proof">Proof: ${esc(x.proof)}</div>
+        <div class="files">${(x.files || []).map(esc).join(" · ")}</div>
+        ${x.note ? `<div class="meta">Note: ${esc(x.note)}</div>` : ""}
+      </div>
+      <div class="acts">
+        ${x.state === "proposed" ? `<button class="act go small" data-d="accept">Accept</button><button class="act warn small" data-d="decline">Decline</button>` : ""}
+        ${x.state === "accepted" || x.state === "declined" ? `<button class="act small" data-d="undo">Undo</button>` : ""}
+        ${x.state === "declined" ? `<button class="act go small" data-d="accept">Accept</button>` : ""}
+      </div>
+    </div>`).join("") : `<div class="meta">No ${esc(cardFilter)} cards.</div>`;
+  $("card-list").querySelectorAll(".tcard").forEach((el) => {
+    el.onclick = () => { cardSel = Number(el.dataset.i); renderCards(); };
+    el.querySelectorAll("button[data-d]").forEach((b) => { b.onclick = (ev) => { ev.stopPropagation(); decideCards([Number(el.dataset.id)], b.dataset.d); }; });
+  });
+  const sel = $("card-list").querySelector(".tcard.sel");
+  if (sel) sel.scrollIntoView({block: "nearest"});
+}
+async function decideCards(ids, decision) {
+  const r = await post("api/cards/decide", {ids, decision});
+  toast(r.ok ? `${decision}: ${r.changed.length} card${r.changed.length === 1 ? "" : "s"}.` : r.error, r.ok);
+  await refreshCards();
+}
+$("accept-all-visible").onclick = () => { const ids = visibleCards().map((x) => x.id); if (ids.length && confirm(`Accept all ${ids.length} shown?`)) decideCards(ids, "accept"); };
+$("decline-all-visible").onclick = () => { const ids = visibleCards().map((x) => x.id); if (ids.length && confirm(`Decline all ${ids.length} shown?`)) decideCards(ids, "decline"); };
+$("run-scout").onclick = async () => { const r = await post("api/cards/scout", {}); toast(r.ok ? "Scout started; new cards arrive over the next 10-25 minutes." : r.error, r.ok); refreshCards(); };
+document.addEventListener("keydown", (ev) => {
+  if (tab !== "cards" || ev.target.closest("input,select,textarea")) return;
+  const rows = visibleCards();
+  if (ev.key === "j") { cardSel = Math.min(rows.length - 1, cardSel + 1); renderCards(); }
+  else if (ev.key === "k") { cardSel = Math.max(0, cardSel - 1); renderCards(); }
+  else if ("adu".includes(ev.key) && rows[cardSel]) decideCards([rows[cardSel].id], {a: "accept", d: "decline", u: "undo"}[ev.key]);
+});
 
 (async () => {
   await refresh();
-  show(location.hash === "#review" ? "review" : "floor");
+  show(["#review", "#cards"].includes(location.hash) ? location.hash.slice(1) : "floor");
 })();
 setInterval(refresh, 3000);
 setInterval(() => { if (tab === "review") refreshReview(); }, 20000);
+setInterval(() => { if (tab === "cards" && cardsData?.scout_running) refreshCards(); }, 15000);
 setInterval(() => {
   const now = Date.now() / 1000 + skew;
   document.querySelectorAll("[data-since]").forEach((el) => { el.textContent = dur(now - Number(el.dataset.since)); });

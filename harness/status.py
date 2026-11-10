@@ -432,6 +432,7 @@ def overview(now: float | None = None) -> dict:
         "run_started": min(starts) if starts else None,
         "model": (C.MODELFILE.read_text().strip() if C.MODELFILE.is_file() else "") or C.DEFAULT_MODEL,
         "models": list(C.MODEL_CHOICES),
+        "factory_on": (C.STATE / "factory_on").is_file(),
     }
 
 
@@ -781,6 +782,17 @@ def start_lanes(lane_id: str | None = None) -> dict:
         if result.returncode != 0:
             return {"ok": False, "error": (result.stderr or "systemctl failed").strip()[-300:]}
     return {"ok": True}
+
+
+def set_factory(on: bool) -> dict:
+    """The quota switch. Card lanes only start while this is on."""
+    path = C.STATE / "factory_on"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    if on:
+        path.write_text("on\n")
+    else:
+        path.unlink(missing_ok=True)
+    return {"ok": True, "on": on}
 
 
 def set_model(model: str) -> dict:
