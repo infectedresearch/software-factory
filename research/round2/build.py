@@ -23,9 +23,21 @@ sys.path.insert(0, str(ROOT / "research"))
 import paper as P1  # noqa: E402  (round 1's print stylesheet and fonts)
 
 REPORT_ID = "FL-TR-2026-03"
-DRAFT = "Draft Research Report 003"
+DRAFT = "Research Report 003"
 SLUG = "show-your-work"
-PDF_NAME = "show-your-work-draft-report.pdf"
+PDF_NAME = "show-your-work-report.pdf"
+FINALIZED = "2026-11-25"
+FOLLOWUP = (
+    "Finalized 25 November 2026; originally published 10 November. A 25 November history audit "
+    "mapped 130 of the 131 factory commits merged in the main integration through cherry-pick trailers "
+    "(one partial port has no trailer). It found no explicit reverts or linked Fixes: follow-ups; "
+    "51 mapped commits had later production-file touches. This is a narrow history audit, not a new test run "
+    "or evidence that no regressions occurred: unlinked fixes are missed. In particular, the known "
+    "safety-filter follow-up was completed after the run but is not detected by this linkage check. "
+    "The original outcome counts and published token accounting are unchanged; finalization uses a frozen "
+    "scouting-accounting snapshot rather than mutable live session counters. The research project is paused; "
+    "round 3 was prepared but never run."
+)
 TITLE = "Show Your Work"
 SUBTITLE = "Proof-carrying commits made an unattended coding factory's second night more useful. Task cards made building cheaper, not the night."
 CLASSES = ["security-or-safety", "user-facing-bug", "reliability", "meaningful-test", "minor"]
@@ -88,7 +100,9 @@ def scout_breakdown(card_areas: set[str]) -> dict:
 
 def lane_hours() -> dict:
     hrs, mins = collections.Counter(), collections.defaultdict(list)
-    for f in glob.glob(str(ROOT / "state/*-[0-9]/loop.log")):
+    # Round 3 setup moves round 2's lane state to state/round2/.
+    lanes_dir = ROOT / "state/round2" if (ROOT / "state/round2/free-1").is_dir() else ROOT / "state"
+    for f in glob.glob(str(lanes_dir / "*-[0-9]/loop.log")):
         lane = Path(f).parent.name
         if not lane.startswith(("free-", "cards-")):
             continue
@@ -117,7 +131,8 @@ def numbers() -> dict:
     conflict = {c["short"] for c in integ["conflicts"]}
     card_areas = set(design["arms"]["cards"]["areas"])
     cards = json.loads((ROOT / "state/cards/cards.json").read_text())
-    scout = scout_breakdown(card_areas)
+    # Publication builds must not change as live session counters evolve.
+    scout = load("scout-accounting.json")["scout_usd"]
     hours = lane_hours()
     n = {"design": design, "rows": rows, "labels": labels, "conflict": conflict, "spot": spot, "scout": scout, "hours": hours}
     merge = load("merge.json")
@@ -440,9 +455,9 @@ def paper(n, t) -> Path:
     out = [f"<!doctype html><html lang=en><head><meta charset=utf-8><title>{esc(TITLE)}</title><style>{P1.CSS}</style></head><body>",
            f"<p class=label>{DRAFT} · {REPORT_ID}</p><h1>{esc(TITLE)}</h1><p class=subtitle>{esc(SUBTITLE)}</p>",
            f"<div class=meta><div><b>Authors</b>{P1.AUTHORS}</div><div><b>Date</b>2026-11-10</div>"
-           "<div><b>Writer · reviewer</b>Grok 4.7 · Claude Opus 5.5</div><div><b>Status</b>Draft · merged and deployed</div></div>",
-           "<p class=status><b>Draft.</b> All changes are merged onto master and deployed. Value labels and engineer-hours are AI estimates; "
-           "value counts once the changes stay live.</p>",
+           "<div><b>Writer · reviewer</b>Grok 4.7 · Claude Opus 5.5</div><div><b>Status</b>Final · 2026-11-25</div></div>",
+           "<p class=status><b>Final report.</b> Changes were merged and deployed on 10 November. Value labels and engineer-hours remain AI estimates, not measured effort.</p>",
+           f"<h2>Publication update and follow-up</h2><p>{esc(FOLLOWUP)}</p>",
            f"<div class=abstract><h3>Abstract</h3><p>{t['abstract']}</p></div>",
            "<p class=label>Highlights</p><ol class=findings>" + "".join(f"<li><b>{esc(h)}.</b> {esc(x)}</li>" for h, x in t["highlights"]) + "</ol>",
            f"<h2><span class=n>1</span>Against round 1</h2>{t['vs_round1']}",
@@ -467,7 +482,8 @@ def paper(n, t) -> Path:
 def markdown(n, t) -> None:
     strip = lambda s: re.sub(r"<[^>]+>", "", s).strip()  # noqa: E731
     f, c = n["arms"]["free"], n["arms"]["cards"]
-    md = [f"# {TITLE}\n\n_{SUBTITLE}_ {REPORT_ID}, Infected Research / FrackLabs, 2026-11-10. Preliminary; merged and deployed.\n",
+    md = [f"# {TITLE}\n\n_{SUBTITLE}_ {REPORT_ID}, Infected Research / FrackLabs, 2026-11-10; finalized 2026-11-25.\n",
+          "## Publication update and follow-up\n\n" + FOLLOWUP + "\n",
           "## Abstract\n\n" + t["abstract"] + "\n", "## Highlights\n"]
     md += [f"- **{h}.** {x}" for h, x in t["highlights"]]
     md.append("\n## Findings\n")

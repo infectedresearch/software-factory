@@ -1,6 +1,9 @@
 {
  "report": "FL-TR-2026-03",
  "title": "Show Your Work",
+ "status": "final",
+ "finalized": "2026-11-25",
+ "followup": "Finalized 25 November 2026; originally published 10 November. A 25 November history audit mapped 130 of the 131 factory commits merged in the main integration through cherry-pick trailers (one partial port has no trailer). It found no explicit reverts or linked Fixes: follow-ups; 51 mapped commits had later production-file touches. This is a narrow history audit, not a new test run or evidence that no regressions occurred: unlinked fixes are missed. In particular, the known safety-filter follow-up was completed after the run but is not detected by this linkage check. The original outcome counts and published token accounting are unchanged; finalization uses a frozen scouting-accounting snapshot rather than mutable live session counters. The research project is paused; round 3 was prepared but never run.",
  "license": "CC BY 4.0",
  "author": "Infected Research / FrackLabs",
  "notes": "Costs are list-price token accounting. Classes, real_bug, severity and eng_hours are AI labels made blind to arm. As in round 1, security and safety changes are listed by category only.",

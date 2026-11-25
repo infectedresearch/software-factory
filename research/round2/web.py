@@ -88,8 +88,9 @@ def report_html(n, t) -> str:
         f"{meta(title, BASE + 'report.html')}</head><body><main>",
         f"<p><a href=\"./\">← Research overview</a></p><p class=kicker>{B.DRAFT} · 2026-11-10</p><h1>{esc(B.TITLE)}</h1>",
         f"<p>{esc(B.SUBTITLE)}</p><p class=by>Infected Research / FrackLabs · {B.REPORT_ID}</p>",
-        "<p class=prelim>Draft: all changes merged onto master and deployed 2026-11-10; full suite showed no new failures. "
+        "<p class=prelim>Final report, 2026-11-25. Changes were merged and deployed 2026-11-10; validation then showed no new failures. "
         "Value labels and engineer-hours are AI estimates, not measured effort.</p>",
+        f"<h2>Publication update and follow-up</h2><p>{esc(B.FOLLOWUP)}</p>",
         "<div class=stats>" + "".join(f"<div class=stat><b>{esc(v)}</b><span>{esc(k)}</span></div>" for v, k in stats) + "</div>",
         "<ul class=tldr>" + "".join(f"<li><b>{esc(h)}.</b> {esc(x)}</li>" for h, x in t["highlights"]) + "</ul>",
         f"<h2>Abstract</h2><p>{t['abstract']}</p>",
@@ -125,7 +126,7 @@ def overview_html(n) -> str:
         f"<meta name=\"citation_title\" content=\"{esc(B.TITLE)}\"><meta name=\"citation_author\" content=\"Infected Research / FrackLabs\">"
         f"<meta name=\"citation_publication_date\" content=\"2026/11/10\"><meta name=\"citation_pdf_url\" content=\"{BASE}{B.PDF_NAME}\">"
         f"{meta(title, BASE)}</head><body><a class=\"skip\" href=\"#main\">Skip to report</a>{HEADER}\n"
-        f"<main id=\"main\" class=\"paper\">\n<p class=\"record\"><time datetime=\"2026-11-10\">2026-11-10</time><span>{B.REPORT_ID} · draft</span></p>\n"
+        f"<main id=\"main\" class=\"paper\">\n<p class=\"record\"><time datetime=\"2026-11-10\">2026-11-10</time><span>{B.REPORT_ID} · final 2026-11-25</span></p>\n"
         f"<h1>{esc(B.TITLE)}</h1>\n<p class=\"subtitle\">{esc(B.SUBTITLE)}</p>\n<p class=\"byline\">Infected Research / FrackLabs · {B.DRAFT}</p>\n"
         f"<nav class=\"files\" aria-label=\"Publication files\"><a href=\"{B.PDF_NAME}\">PDF</a><a href=\"report.html\">HTML</a><a href=\"data.json\">Data</a><a href=\"criteria.md\">Pre-registration</a><a href=\"https://github.com/infectedresearch/software-factory\">GitHub</a></nav>\n"
         f"<p>A second overnight run of 14 coding agents on the same private production codebase as <a href=\"/research/software-factory/\">round 1</a>. "
@@ -134,6 +135,7 @@ def overview_html(n) -> str:
         "<dl class=\"facts\">" + "".join(f"<div><dt>{esc(k)}</dt><dd>{esc(v)}</dd></div>" for k, v in facts) + "</dl>\n"
         "<p class=\"note\">One night, one codebase, compared before and after rather than against a control. The harness changes shipped together, so their effects cannot be separated. "
         "Value labels are model judgments, not measured savings.</p>\n"
+        f"<h2>Publication update and follow-up</h2><p>{esc(B.FOLLOWUP)}</p>\n"
         "<h2>Files</h2><p>The paper in PDF and HTML, sanitized per-commit records and the pre-registration. The harness, including round 2's card scout and proof gate, is on GitHub. Application source, diffs and agent transcripts are excluded.</p>\n"
         "<p class=\"note\">Code: MIT. Paper and data: CC BY 4.0.</p>\n"
         f"<h2>Citation</h2><p class=\"citation\">Infected Research / FrackLabs. 2026. <cite>{esc(B.TITLE)}: {esc(B.SUBTITLE)}</cite> {B.REPORT_ID}.</p>\n"
@@ -144,14 +146,14 @@ def index_entry(n) -> str:
     r1, r2 = n["r1"], n["r2"]
     return (
         '<section class="entry" aria-labelledby="syw-title">\n'
-        f'<div class="entry-top"><span>{B.REPORT_ID}</span><time datetime="2026-11-10">10 NOV 2026</time><span class="preliminary">DRAFT RESEARCH REPORT 003</span></div>\n'
+        f'<div class="entry-top"><span>{B.REPORT_ID}</span><time datetime="2026-11-10">10 NOV 2026</time><span class="preliminary">RESEARCH REPORT 003 · FINAL</span></div>\n'
         '<div class="entry-grid"><div class="entry-copy"><p class="eyebrow">03 / SOFTWARE ENGINEERING</p>'
         f'<h2 id="syw-title"><a href="/research/{B.SLUG}/"><span>{esc(B.TITLE)}</span> <small>{B.DRAFT}</small></a></h2>'
         '<p class="subtitle">Round two of the software factory: proof-carrying commits.</p>'
         f'<p>Fourteen coding agents, a second night. Every commit had to prove itself with a test. Real fixes rose from {r1["real"]} to {r2["real"]}; '
         f'minor commits fell from {B.pct(r1["minor"] / r1["integrated"])} to {B.pct(r2["minor"] / r2["integrated"])}, at the same price per fix.</p>'
         '<p class="annotation">Free lanes against scout-written task cards. Pre-registered, merged and deployed.</p>'
-        f'<nav class="files" aria-label="Show Your Work publication files"><a class="primary-file" href="/research/{B.SLUG}/{B.PDF_NAME}">READ THE DRAFT <span aria-hidden="true">↗</span></a>'
+        f'<nav class="files" aria-label="Show Your Work publication files"><a class="primary-file" href="/research/{B.SLUG}/{B.PDF_NAME}">READ THE PAPER <span aria-hidden="true">↗</span></a>'
         f'<a href="/research/{B.SLUG}/report.html">HTML</a><a href="/research/{B.SLUG}/data.json">Data</a><a href="https://github.com/infectedresearch/software-factory">GitHub</a></nav></div>'
         f'<figure class="review-plot"><figcaption><span>RUN 02 / AGAINST RUN 01</span><span>MERGED COMMITS</span></figcaption>'
         f'<img src="/research/{B.SLUG}/round-comparison.svg" width="430" height="300" alt="Round 1 against round 2: real fixes merged {r1["real"]} to {r2["real"]}, minor share {B.pct(r1["minor"] / r1["integrated"])} to {B.pct(r2["minor"] / r2["integrated"])}, tokens per real fix ${r1["per_real"]:.2f} to ${r2["per_real"]:.2f}.">'
@@ -174,7 +176,8 @@ def data_json(n) -> dict:
             for a, x in n["arms"].items()}
     spot = [{k: s.get(k) for k in ("sha", "arm", "fails_before", "passes_after", "class", "real_bug", "overclaims",
                                    "classifier_class", "classifier_real_bug")} for s in n["spot"]["results"]]
-    return {"report": B.REPORT_ID, "title": B.TITLE, "license": "CC BY 4.0", "author": "Infected Research / FrackLabs",
+    return {"report": B.REPORT_ID, "title": B.TITLE, "status": "final", "finalized": B.FINALIZED,
+            "followup": B.FOLLOWUP, "license": "CC BY 4.0", "author": "Infected Research / FrackLabs",
             "notes": "Costs are list-price token accounting. Classes, real_bug, severity and eng_hours are AI labels made blind to arm. "
                      "As in round 1, security and safety changes are listed by category only.",
             "round_comparison": {"round1": n["r1"], "round2": n["r2"]}, "arms": arms, "primary_diff": round(n["primary_diff"], 4),

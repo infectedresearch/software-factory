@@ -1,0 +1,11 @@
+{
+ "method": "Frozen from the v1.1.0 public data.json (published 2026-11-10), not mutable live session counters. Preserves the original report accounting at finalization.",
+ "scout_usd": {
+  "card_wrong_dir": 16.45,
+  "free_wrong_dir": 9.39,
+  "card_produced": 85.55,
+  "free_produced": 18.68,
+  "free_no_cards": 10.39,
+  "card_no_cards": 45.86
+ }
+}
