@@ -1,0 +1,45 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Routing the Bill — Research Report 004 / FrackLabs</title>
+<meta name="description" content="Eight weeks of LLM proxy traffic (131k requests, 20.6B logical prompt tokens; 95.1% cache reads in 102,087 detailed captures) followed by live multi-turn paired trials across a 12-task operator shortlist. What cache-first routing actually saves, where single-shot pilots misled us, and why repeated test failures need targeted escalation.">
+<link rel="stylesheet" href="/research/research.css">
+<meta name="citation_title" content="Routing the Bill: Cache-First Model Routing Across Real Agent Loops">
+<meta name="citation_author" content="Infected Research / FrackLabs">
+<meta name="citation_publication_date" content="2026/11/15">
+<link rel="canonical" href="https://fracktron.com/research/routing-the-bill/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Routing the Bill — Research Report 004 / FrackLabs">
+<meta property="og:description" content="131k proxy requests, four negative single-shot pilots, and paired multi-turn agent loops across real operator tasks.">
+<meta property="og:url" content="https://fracktron.com/research/routing-the-bill/">
+<meta property="og:site_name" content="FrackLabs">
+<meta property="og:image" content="https://fracktron.com/research/social-card.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Routing the Bill — Research Report 004 / FrackLabs">
+<meta name="twitter:description" content="Cache-first model routing across 131k historical turns and paired multi-turn operator tasks.">
+<meta name="twitter:image" content="https://fracktron.com/research/social-card.png">
+<link rel="icon" href="/research/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/research/favicon.ico" sizes="16x16 32x32 48x48">
+<link rel="apple-touch-icon" href="/research/apple-touch-icon.png" sizes="180x180">
+<meta name="theme-color" content="#132c24">
+</head><body><a class="skip" href="#main">Skip to report</a>
+<header><div class="header-inner"><a class="wordmark" href="/"><span>[</span> FRACKTRON <span>]</span></a><nav aria-label="Site navigation"><a href="/">Home</a><a href="/research/" aria-current="page">Research</a><a href="report.html">Read report</a></nav><span class="header-note">INFECTED RESEARCH / FRACKLABS</span></div></header>
+<main id="main" class="paper">
+<p class="record"><time datetime="2026-11-15">2026-11-15</time><span>FL-TR-2026-04 · FINAL RESEARCH REPORT 004 · VERSION 1.0</span></p>
+<h1>Routing the Bill</h1>
+<p class="subtitle">Eight weeks of LLM proxy cache economics, four failed single-shot pilots, and paired multi-turn agent trials across real operator work.</p>
+<p class="byline">Infected Research / FrackLabs · Research Report 004</p>
+<nav class="files" aria-label="Publication files"><a class="primary-file" href="report.html">READ THE REPORT ↗</a><a href="report.html#paired">11-task scoreboard</a><a href="report.html#audit">Cross-check &amp; quota audit</a><a href="data.json">Data (JSON)</a></nav>
+<p>Between 10 September and 5 November 2026, <code>frack-router</code> mediated 131,228 requests and 20.6B logical prompt tokens across OpenAI, Anthropic, xAI, Google, and local vLLM backends. In the 102,087 detailed per-request captures (16.2B prompt tokens), <b>95.14% of prompt tokens were prefix-cache reads</b>—making cache preservation far more consequential than per-turn classifier cleverness. When we tried to prove Auto-routing savings on cheap single-shot patch prompts, four consecutive pilots failed or lost money (Haiku-first cost 36.8% more than fixed Sonnet; single-shot non-reasoning Grok solved 0 of 2 tasks). Rebuilding the evaluation around complete multi-turn tool-and-test loops from a 12-task operator shortlist told the real story—and exposed both six production proxy bugs and the exact failure mode where refusing to escalate hurts task completion.</p>
+<figure style="margin:28px 0;max-width:560px"><img src="paired-routing.svg" width="430" height="300" style="display:block;width:100%;height:auto;border:1px solid var(--line);padding:14px;background:#050a07" alt="Paired 11-task benchmark: 8/11 vs 8/11 verified completions, $4.02 to $1.03 list-equivalent, and 19% to 3% direct Anthropic 5-hour header burn"><figcaption style="margin-top:10px;color:var(--muted);font-size:13px">Paired multi-turn results before Policy B9: equal verified completions on OpenAI (8/11 vs 8/11), −74.3% list-price estimate (−64.4% calibrated OpenAI weekly quota; −35.6% to −58.6% vs empirical manual model mixes), and −84.2% direct Anthropic 5-hour session header burn.</figcaption></figure>
+<dl class="facts">
+<div><dt>Historical traffic</dt><dd>131,228 requests · 20.6B logical prompt tokens overall; 95.14% cache reads across 102,087 detailed captures containing 16.2B prompt tokens ($8.6k list estimate with cache discounts vs $59.9k uncached counterfactual).</dd></div>
+<div><dt>Negative pilots kept</dt><dd>4 single-shot campaigns retained in full: HTTP 402 halt, Haiku-first +36.8% cost regression, native string-error crash, and 0/2 Grok single-shot patches.</dd></div>
+<div><dt>OpenAI 11-task loop</dt><dd><code>auto-gpt</code> matched manual <code>gpt-6-astra</code> at <b>8/11 verified completions</b> (2/3 vs 2/3 on untouched held-out tasks) in 830s vs 1,226s (−32.3% time).</dd></div>
+<div><dt>Cross-checked savings</dt><dd>−74.3% vs pinned $10/M frontier (95% bootstrap CI [68.4%, 79.7%]); <b>−64.4%</b> calibrated OpenAI weekly quota; <b>−58.6%</b> vs 8-week manual mix ($6.23/M); <b>−35.6%</b> vs recent manual mix ($3.89/M).</dd></div>
+<div><dt>Direct Claude headers</dt><dd>Across 6 completed cross-provider tasks, Universal <code>auto</code> burned <b>3.0%</b> of the 5-hour session window vs <b>19.0%</b> on manual Fable (−84.2%), offloading read loops to local <code>qwen3.8-27b</code>.</dd></div>
+<div><dt>Shipped policy update</dt><dd>Both suites failed the same safety-redesign task (<code>H10</code>) when pinned to a warm workhorse across 3 failing test runs. Shipped <code>auto-2026-11-15.1</code> (Policy B9: escalate at 3 consecutive verified failures + mixed-summary pytest fix).</dd></div>
+</dl>
+<p class="note"><b>Final publication, 28 November 2026.</b> This closes the 15 November draft without new experiments or peer review. Equal 8/11 totals are not quality parity: the arms failed different tasks, only three tasks were held out, and there were no repeated trials establishing equivalent reliability. No ablation establishes the independent benefit of B9 escalation; the fresh H10 pass used only the workhorse, and later H10 trials still failed. Historical deployment statements are not a fresh production verification.</p>
+<p class="note">One operator's workload across one lab's repositories. Automated graders verify functional, security, and factual constraints; subjective prose/UX preference packets remain blind-reviewed separately. Clean container workspaces (2k–41k prompt tokens) under-test 150k+ long-context attention decay.</p>
+<h2>Citation</h2>
+<p class="citation">Infected Research / FrackLabs. 2026. <cite>Routing the Bill: Cache-First Model Routing Across Real Agent Loops.</cite> Research Report 004, FL-TR-2026-04. Version 1.0, finalized 28 November 2026; originally published 15 November 2026.</p>
+</main><footer><a href="/research/">Research index</a><a href="/research/feed.xml">RSS</a></footer></body></html>

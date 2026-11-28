@@ -6,6 +6,12 @@
 
 Infected Research / FrackLabs · Technical report FL-TR-2026-01 · October 2026
 
+## Final publication — 28 November 2026
+
+The experiment series is concluded for this release. [Closing notes: What our agent gates failed to measure](https://fracktron.com/research/closing-notes/) distinguish builder cost from end-to-end cost, regression proofs from missing-symbol failures, and green public checks from complete requirements. Round 2 includes the qualified November 25 history follow-up and frozen accounting. No round 3 was run. Artifacts remain available for inspection and adaptation; this is not a supported general-purpose service or a peer-reviewed productivity claim.
+
+The `site/kraken/` and `site/routing-the-bill/` snapshots preserve the related final reports and their public evidence. Finalization adds no new experiments. Original draft files and initial-release counts are retained as historical records.
+
 ## Results, with the denominators attached
 
 | Initial-release measure | Result |
@@ -32,7 +38,7 @@ infrastructure, or human time. Tokens include cache reads, not 848 million newly
 
 ## Round 2: Show Your Work (FL-TR-2026-03)
 
-[Read the draft](https://fracktron.com/research/show-your-work/) · [PDF](https://fracktron.com/research/show-your-work/show-your-work-draft-report.pdf) · `research/round2/`
+[Read the final report](https://fracktron.com/research/show-your-work/) · [PDF](https://fracktron.com/research/show-your-work/show-your-work-report.pdf) · `research/round2/`
 
 A second night on the same codebase. Every commit had to carry a `Proof:` line naming a test that fails
 before the change and passes after; an AI reviewer judged each commit as it landed; half the lanes built

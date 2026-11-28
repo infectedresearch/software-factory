@@ -1,0 +1,361 @@
+{
+  "report_id": "FL-TR-2026-04",
+  "version": "1.0",
+  "publication_status": "final",
+  "finalized_date": "2026-11-28",
+  "original_draft_version": "0.1-draft",
+  "publication_note": "Editorial finalization only; no new experiments or peer review. Original measurements and outcomes are unchanged.",
+  "date": "2026-11-15",
+  "historical_traffic": {
+    "window": "2026-09-10 to 2026-11-05",
+    "requests_total": 131228,
+    "prompt_tokens_total": 20600000000,
+    "per_request_rows": 102087,
+    "cache_read_share_pct": 95.14,
+    "list_cost_cached_usd": 8578,
+    "list_cost_uncached_counterfactual_usd": 59892,
+    "same_token_replay_v2_delta_pct": -32.7,
+    "same_token_replay_switches": [
+      294,
+      13
+    ]
+  },
+  "negative_single_shot_pilots": [
+    {
+      "campaign": "openrouter-mini-sol-00",
+      "outcome": "halted HTTP 402 before completion"
+    },
+    {
+      "campaign": "subscription-history-01",
+      "calls": 6,
+      "outcome": "Haiku-first +36.76% dearer than fixed Sonnet across attempted tasks"
+    },
+    {
+      "campaign": "grok-tiny-03",
+      "calls": 1,
+      "outcome": "halted on empty-tools tool_choice 400; uncovered native error parser crash (fixed in 340896a)"
+    },
+    {
+      "campaign": "grok-tiny-corrected-04",
+      "calls": 2,
+      "outcome": "0/2 verified single-shot completions (16/20 and 9/11 checks)"
+    }
+  ],
+  "paired_campaigns_gpt_11": [
+    {
+      "id": "H01",
+      "campaign": "gpt-paired-5task-03",
+      "title": "Arch/Hyprland ASR (2 turns)",
+      "kind": "Factual research",
+      "split": "Calibration",
+      "baseline_passed": true,
+      "auto_passed": true,
+      "baseline_calls": 4,
+      "auto_calls": 5,
+      "baseline_wall_s": 45.14,
+      "auto_wall_s": 28.25,
+      "baseline_usd": 0.265236,
+      "auto_usd": 0.078212,
+      "auto_models": {
+        "gpt-6-sol": 5
+      },
+      "saving_pct": 70.5
+    },
+    {
+      "id": "H03",
+      "campaign": "gpt-paired-5task-03",
+      "title": "TrackTron Rust vs SQLite CPU",
+      "kind": "Performance diagnosis",
+      "split": "Calibration",
+      "baseline_passed": true,
+      "auto_passed": true,
+      "baseline_calls": 3,
+      "auto_calls": 3,
+      "baseline_wall_s": 49.08,
+      "auto_wall_s": 18.85,
+      "baseline_usd": 0.25604,
+      "auto_usd": 0.046138,
+      "auto_models": {
+        "gpt-6-sol": 3
+      },
+      "saving_pct": 82.0
+    },
+    {
+      "id": "H07",
+      "campaign": "gpt-paired-5task-03",
+      "title": "Search same-links bug (Chromium+API)",
+      "kind": "Coding + integration",
+      "split": "Calibration",
+      "baseline_passed": true,
+      "auto_passed": true,
+      "baseline_calls": 12,
+      "auto_calls": 13,
+      "baseline_wall_s": 89.63,
+      "auto_wall_s": 82.68,
+      "baseline_usd": 0.341592,
+      "auto_usd": 0.073732,
+      "auto_models": {
+        "gpt-6-sol": 13
+      },
+      "saving_pct": 78.4
+    },
+    {
+      "id": "H09",
+      "campaign": "gpt-paired-h10h09-04",
+      "title": "#factory explainer UX rewrite",
+      "kind": "UX copy / interaction",
+      "split": "Calibration",
+      "baseline_passed": true,
+      "auto_passed": true,
+      "baseline_calls": 2,
+      "auto_calls": 2,
+      "baseline_wall_s": 12.73,
+      "auto_wall_s": 8.54,
+      "baseline_usd": 0.02478,
+      "auto_usd": 0.00611,
+      "auto_models": {
+        "gpt-6-sol": 2
+      },
+      "saving_pct": 75.3
+    },
+    {
+      "id": "H10",
+      "campaign": "gpt-paired-h10h09-04",
+      "title": "#factory chat\u2192card safety redesign",
+      "kind": "Architecture + safety",
+      "split": "Calibration",
+      "baseline_passed": true,
+      "auto_passed": false,
+      "baseline_calls": 11,
+      "auto_calls": 15,
+      "baseline_wall_s": 73.4,
+      "auto_wall_s": 114.11,
+      "baseline_usd": 0.328412,
+      "auto_usd": 0.130128,
+      "auto_models": {
+        "gpt-6-sol": 15
+      },
+      "saving_pct": 60.4
+    },
+    {
+      "id": "H04",
+      "campaign": "gpt-heldout-3task-06",
+      "title": "Agent-first platform thesis (2 turns)",
+      "kind": "Platform strategy",
+      "split": "Held-out",
+      "baseline_passed": true,
+      "auto_passed": true,
+      "baseline_calls": 5,
+      "auto_calls": 5,
+      "baseline_wall_s": 271.94,
+      "auto_wall_s": 93.62,
+      "baseline_usd": 0.796112,
+      "auto_usd": 0.135305,
+      "auto_models": {
+        "gpt-6-luna": 2,
+        "gpt-6-sol": 3
+      },
+      "saving_pct": 83.0
+    },
+    {
+      "id": "H11",
+      "campaign": "gpt-heldout-confirm-07",
+      "title": "Channel-surf inline preview & autoplay",
+      "kind": "Browser UX debugging",
+      "split": "Held-out",
+      "baseline_passed": false,
+      "auto_passed": false,
+      "baseline_calls": 25,
+      "auto_calls": 23,
+      "baseline_wall_s": 200.71,
+      "auto_wall_s": 165.12,
+      "baseline_usd": 0.683612,
+      "auto_usd": 0.255435,
+      "auto_models": {
+        "gpt-6-sol": 23
+      },
+      "saving_pct": 62.6
+    },
+    {
+      "id": "H12",
+      "campaign": "gpt-heldout-confirm-07",
+      "title": "YouTube live visible-presenter gate",
+      "kind": "Quality engineering",
+      "split": "Held-out",
+      "baseline_passed": true,
+      "auto_passed": true,
+      "baseline_calls": 15,
+      "auto_calls": 18,
+      "baseline_wall_s": 67.7,
+      "auto_wall_s": 79.68,
+      "baseline_usd": 0.41347,
+      "auto_usd": 0.091954,
+      "auto_models": {
+        "gpt-6-sol": 18
+      },
+      "saving_pct": 77.8
+    },
+    {
+      "id": "H05",
+      "campaign": "gpt-remaining-3task-09",
+      "title": "Private search product feasibility",
+      "kind": "Product ideation",
+      "split": "Remaining",
+      "baseline_passed": true,
+      "auto_passed": true,
+      "baseline_calls": 3,
+      "auto_calls": 3,
+      "baseline_wall_s": 52.3,
+      "auto_wall_s": 17.01,
+      "baseline_usd": 0.0825,
+      "auto_usd": 0.011726,
+      "auto_models": {
+        "gpt-6-luna": 2,
+        "gpt-6-sol": 1
+      },
+      "saving_pct": 85.8
+    },
+    {
+      "id": "H06",
+      "campaign": "gpt-remaining-3task-09",
+      "title": "Branded search demo + brand removal",
+      "kind": "Frontend + design",
+      "split": "Remaining",
+      "baseline_passed": false,
+      "auto_passed": false,
+      "baseline_calls": 14,
+      "auto_calls": 15,
+      "baseline_wall_s": 297.01,
+      "auto_wall_s": 167.8,
+      "baseline_usd": 0.59361,
+      "auto_usd": 0.156072,
+      "auto_models": {
+        "gpt-6-sol": 15
+      },
+      "saving_pct": 73.7
+    },
+    {
+      "id": "H08",
+      "campaign": "gpt-remaining-3task-09",
+      "title": "!anonimage DM\u2192public privacy feature",
+      "kind": "Feature + privacy",
+      "split": "Remaining",
+      "baseline_passed": false,
+      "auto_passed": true,
+      "baseline_calls": 9,
+      "auto_calls": 8,
+      "baseline_wall_s": 66.66,
+      "auto_wall_s": 54.69,
+      "baseline_usd": 0.233562,
+      "auto_usd": 0.049723,
+      "auto_models": {
+        "gpt-6-sol": 8
+      },
+      "saving_pct": 78.7
+    }
+  ],
+  "universal_6_completed": {
+    "baseline_fable_verified": "6/6",
+    "auto_strict_verified": "4/6 (5/6 substantive)",
+    "baseline_list_usd": 6.7673,
+    "auto_list_usd": 1.6976,
+    "list_saving_pct": 74.91,
+    "direct_anthropic_5h_header_burn_pct": {
+      "baseline": 19.0,
+      "auto": 3.0,
+      "saving_pct": 84.2
+    }
+  },
+  "audit_and_calibration": {
+    "native_event_token_mismatches": 0,
+    "bootstrap_95_ci_pct": [
+      68.35,
+      79.73
+    ],
+    "openai_real_weekly_quota_saving_pct": 64.4,
+    "lifetime_manual_mix_input_rate_usd_per_mtok": 6.23,
+    "recent_owner_manual_mix_input_rate_usd_per_mtok": 3.89,
+    "saving_vs_lifetime_manual_mix_pct": 58.6,
+    "saving_vs_recent_manual_mix_pct": 35.6
+  },
+  "policy_b9_followup": {
+    "baseline_passed": true,
+    "auto_passed": true,
+    "baseline_usd": 0.503648,
+    "auto_usd": 0.107111,
+    "baseline_wall_s": 76.57,
+    "auto_wall_s": 84.85,
+    "auto_models": {
+      "gpt-6-sol": 11
+    }
+  },
+  "opus55_daily_driver_followup": [
+    {
+      "id": "H07",
+      "campaign": "opus55-b1plus-confirm-12",
+      "baseline_passed": true,
+      "auto_passed": true,
+      "baseline_usd": 0.405997,
+      "auto_usd": 0.101308,
+      "baseline_wall_s": 122.88,
+      "auto_wall_s": 107.44,
+      "auto_models": {
+        "gpt-6.1-sol": 13
+      },
+      "saving_pct": 75.0
+    },
+    {
+      "id": "H10",
+      "campaign": "opus55-b1plus-confirm-12",
+      "baseline_passed": true,
+      "auto_passed": false,
+      "baseline_usd": 0.545219,
+      "auto_usd": 0.117977,
+      "baseline_wall_s": 173.34,
+      "auto_wall_s": 126.46,
+      "auto_models": {
+        "gpt-6.1-sol": 15
+      },
+      "saving_pct": 78.4
+    },
+    {
+      "id": "H03",
+      "campaign": "opus55-b1plus-confirm-12",
+      "baseline_passed": true,
+      "auto_passed": true,
+      "baseline_usd": 0.1892,
+      "auto_usd": 0.054262,
+      "baseline_wall_s": 41.44,
+      "auto_wall_s": 50.7,
+      "auto_models": {
+        "gpt-6.1-sol": 3
+      },
+      "saving_pct": 71.3
+    },
+    {
+      "id": "H12",
+      "campaign": "opus55-b1plus-confirm-12",
+      "baseline_passed": true,
+      "auto_passed": true,
+      "baseline_usd": 0.366985,
+      "auto_usd": 0.089801,
+      "baseline_wall_s": 101.82,
+      "auto_wall_s": 111.61,
+      "auto_models": {
+        "gpt-6.1-sol": 17
+      },
+      "saving_pct": 75.5
+    }
+  ],
+  "longctx_h10_followup": {
+    "baseline_passed": true,
+    "auto_passed": false,
+    "baseline_usd": 2.072078,
+    "auto_usd": 0.431552,
+    "baseline_wall_s": 122.11,
+    "auto_wall_s": 81.03,
+    "baseline_prompt_tokens": 1070738,
+    "auto_prompt_tokens": 1129664,
+    "auto_cache_hit_pct": 91.93
+  }
+}

@@ -1,0 +1,205 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Routing the Bill — Full Research Report 004 / FrackLabs</title>
+<meta name="description" content="Full Research Report 004 (FL-TR-2026-04): eight weeks of LLM proxy cache economics, four negative single-shot pilots, paired 12-task multi-turn evaluation, raw vendor header cross-checks, and Policy B9 deployment.">
+<link rel="canonical" href="https://fracktron.com/research/routing-the-bill/report.html">
+<link rel="stylesheet" href="report.css">
+<link rel="icon" href="/research/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/research/apple-touch-icon.png">
+<meta name="citation_title" content="Routing the Bill: Cache-First Model Routing Across Real Agent Loops">
+<meta name="citation_author" content="Infected Research / FrackLabs">
+<meta name="citation_publication_date" content="2026/11/15">
+</head><body>
+<main id="main">
+<p><a href="./">← Report overview</a> · <a href="/research/">Research index</a></p>
+<p class="kicker">FrackLabs · Research Report 004 · FL-TR-2026-04</p>
+<h1>Routing the Bill</h1>
+<p class="by">Eight weeks of an LLM proxy learning where the money goes—from 131k historical turns and four failed single-shot pilots to paired multi-turn agent loops. · 15 November 2026</p>
+<p class="prelim"><b>Final Research Report 004 · Version 1.0 (2026-11-28).</b> Final publication closes the draft originally published 15 November 2026; it is not peer review or a new experiment. Recorded measurements and outcomes remain unchanged. Combines the 2026-11-05 historical proxy audit with live paired multi-turn evaluations run 2026-11-11 through 2026-11-15. Dollar figures are list-price estimates unless explicitly marked as vendor rate-limit header percentages.</p>
+
+<div class="stats">
+  <div class="stat"><b>131k · 95.1%</b><span>historical requests · prompt tokens served from prefix cache</span></div>
+  <div class="stat"><b>8/11 vs 8/11</b><span>verified completions: Auto-GPT vs manual GPT-6 Astra (2/3 held-out)</span></div>
+  <div class="stat"><b>−74.3% / −64.4%</b><span>list-price Δ vs Astra / calibrated OpenAI weekly quota Δ</span></div>
+  <div class="stat"><b>3.0% vs 19.0%</b><span>direct Anthropic 5h header burn across 6 cross-provider tasks</span></div>
+</div>
+
+<ul class="tldr">
+  <li><b>The prefix cache dominates agent economics.</b> Across 102,087 per-request captures (16.2B prompt tokens), 95.14% of input tokens were cache reads. Any routing rule that switches models or reasoning effort on a warm OpenAI or Anthropic transcript pays a 7×–15× cold-prefill penalty (~9 turns of normal spend).</li>
+  <li><b>Single-shot benchmarks lied about multi-turn routing.</b> Four early reduced-context pilots failed or regressed: cheap-first Haiku→Sonnet cost 36.8% <i>more</i> than fixed Sonnet, and single-shot non-reasoning Grok solved 0 of 2 historical bugs. Only full multi-turn loops—where each arm explores files, runs real Docker/Chromium tests, and repairs its own mistakes—measured real workflow cost.</li>
+  <li><b>Auto-GPT matched frontier completions at a quarter of list price—by unit rate, not fewer tokens.</b> Across all 11 runnable tasks from a 12-task operator shortlist, <code>auto-gpt</code> solved 8/11 vs 8/11 for manual <code>gpt-6-astra</code> in 32% less wall time. Raw SQLite <code>native_json</code> audits show Auto actually used +9% more uncached input and +27% more output tokens; 100% of the saving came from $0.10–$2/M vs $10/M unit rates while retaining 86–97% cache hits.</li>
+  <li><b>Vendor headers &amp; empirical habits calibrate the headline.</b> Direct Anthropic headers measured −84.2% 5-hour session burn (3.0% vs 19.0%). OpenAI's weekly quota meter weights Sol ~3.6× (not 5.0×) cheaper than Astra, yielding ~−64.4% real OpenAI quota burn; re-anchoring against the operator's actual mixed manual habits ($6.23/M lifetime, $3.89/M recent) yields <b>−58.6%</b> and <b>−35.6%</b>.</li>
+  <li><b>Never-escalate (Policy B2) broke on one convergent case—fixing the policy.</b> Both OpenAI and Universal Auto failed <code>H10</code> (conversational safety redesign) when the warm workhorse failed three consecutive public test runs without escalating. We shipped <b>Policy B9 (<code>auto-2026-11-15.1</code>)</b>: keep 1–2 failures on the warm workhorse, escalate once to the strong tier at 3 consecutive verified failures, and fix mixed-summary pytest detection.</li>
+</ul>
+
+<nav class="contents" aria-label="Report sections">
+  <a href="#history">1. Historical cache audit</a>
+  <a href="#failures">2. Failed single-shot pilots</a>
+  <a href="#shortlist">3. 12-task corpus</a>
+  <a href="#paired">4. Paired multi-turn results</a>
+  <a href="#audit">5. Raw-DB &amp; header cross-check</a>
+  <a href="#representativeness">6. Representativeness &amp; baselines</a>
+  <a href="#policy">7. Shipped policy (v2 + B9)</a>
+  <a href="#bugs">8. Production bugs found</a>
+</nav>
+
+<h2 id="history">1. Eight weeks of proxy traffic: the cache is the bill</h2>
+<p><code>frack-router</code> sits in front of OpenCode sessions and lab services, translating OpenAI Chat Completions, Responses, and Anthropic Messages across first-party OpenAI, Anthropic, xAI, and Google Ultra subscriptions plus two local vLLM GPUs. Between 2026-09-10 and 2026-11-05 it served 131,228 requests and 20.6B logical prompt tokens (102,087 per-request rows from October onward).</p>
+<p>In interactive agent loops, prompt medians are huge (111k–168k tokens across policy eras) and completions tiny (146–265 tokens). Over those 102,087 captured turns, 15.4B of 16.2B prompt tokens (<b>95.14%</b>) were served from provider prefix caches—96.5% on OpenAI, 94.5% on xAI, and 94.0% on Anthropic. At list rates, cached reads reduced the counterfactual token bill from $59,892 to $8,578.</p>
+<p>Live probes established three physical constraints that govern routing:</p>
+<ul>
+  <li><b>Effort forks caches on OpenAI and Anthropic, not Google:</b> Mid-session switches from <code>medium</code> to <code>high</code> reasoning effort produced a 0% cache hit on <code>gpt-6-sol</code>, <code>gpt-5.6-sol</code>, and <code>claude-sonnet-5</code>, versus a 91% cache hit across 5/5 runs on Google Antigravity.</li>
+  <li><b>Cache TTL floors:</b> Anthropic prefixes expired by ~6 minutes idle; Google between 6 and 12 minutes; OpenAI remained warm past 13–25 minutes.</li>
+  <li><b>Escalation capture wasted 39% of Auto spend:</b> Under the October policy, a single persisted tool failure jumped a warm 190k-token session to <code>gpt-5.6-sol</code> ($4/M), and cache-retention stickiness held it there for a median 27 subsequent turns. Across 18,152 turns (Oct 24–Nov 5), jumping cleared the failure next turn only 7% of the time (n=43) vs 30–40% for staying put (n=1,790). Replaying cache-first failure retention (Policy B1+B2+B7) on fixed historical tokens estimated −32.7% list cost and 13 switches instead of 294—<i>a model-based counterfactual, not a quality proof</i>.</li>
+</ul>
+
+<h2 id="failures">2. Four single-shot pilots that failed (kept in the record)</h2>
+<p>Before building full multi-turn environments, we attempted cheap single-shot historical patch evaluations. All four failed to establish Auto efficiency, and keeping them prevented false claims:</p>
+<div class="tablewrap"><table>
+  <thead><tr><th>Campaign</th><th>Setup</th><th>Outcome &amp; lesson</th></tr></thead>
+  <tbody>
+    <tr><td><code>openrouter-mini-sol-00</code></td><td>Prepaid API pilot on 2 frozen tasks</td><td>Halted immediately on HTTP 402 (balance −$0.63); motivated durable SQLite budget reservations (<code>DurableLedger</code>).</td></tr>
+    <tr><td><code>subscription-history-01</code></td><td>Haiku 4.5 → Sonnet 5 cheap-first (6 calls, 72.6k tokens)</td><td><b>Negative result:</b> cheap-first cost <b>+36.76% more</b> ($0.226 list-eq) than fixed Sonnet because failed cheap attempts paid double context + output overhead.</td></tr>
+    <tr><td><code>grok-tiny-03</code></td><td><code>grok-4.20-0309-non-reasoning</code> single-shot</td><td>Halted on call 1 (HTTP 400 when <code>tool_choice</code> was sent with empty <code>tools</code>); exposed a production router crash on string provider errors (fixed in <code>340896a</code>).</td></tr>
+    <tr><td><code>grok-tiny-corrected-04</code></td><td>Corrected Grok single-shot on 2 bounded git bugs</td><td>2 calls, 3,142 tokens, 7.3s, <b>0/2 verified</b> (16/20 checks on URL normalization; 9/11 on endpoint projection). Cheap wrong patches are zero value.</td></tr>
+  </tbody>
+</table></div>
+
+<h2 id="shortlist">3. Reconstructing 12 actual operator tasks</h2>
+<p>Single-shot patch prompts strip away how agents actually work: inspecting files, running tests, seeing an error, and fixing it over 5–25 turns. We verified account ownership via <code>api_keys.auth_user_id = 1</code> and extracted 12 real tasks across 8 operator sessions (<code>H01–H12</code>), recovering exact starting requests for 11/12 and separating calibration families (<code>H01, H03, H07, H09, H10</code>) from an untouched held-out split (<code>H04, H11, H12</code>) plus remaining tasks (<code>H05, H06, H08</code>). One interactive desktop polkit installation task (<code>H02</code>) was explicitly excluded as a live-workstation safety boundary, leaving <b>11 runnable multi-turn harnesses</b> graded inside networkless rootless-equivalent Docker + headless Chromium containers.</p>
+
+<h2 id="paired">4. Paired multi-turn results across all 11 runnable tasks</h2>
+<p>Both arms received identical prompts, tools, test-run caps, 16,384-token output+thinking headroom, streaming SSE wire framing (<code>stream: true</code>, <code>include_usage: true</code>), and persistent per-task <code>x-session-id</code> cache keys.</p>
+
+<figure><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 408" role="img" aria-label="Per-task list-price estimate: manual gpt-6-astra versus auto-gpt across 11 tasks" font-family="system-ui,sans-serif" font-size="11">
+<rect x="180" y="10" width="10" height="10" fill="#9aa1ab"/><text x="195" y="19" fill="#5d6472" font-size="10.5">Manual frontier (gpt-6-astra)</text>
+<rect x="380" y="10" width="10" height="10" fill="#0f766e"/><text x="395" y="19" fill="#5d6472" font-size="10.5">Routed (auto-gpt)</text>
+<text x="170" y="50" text-anchor="end" fill="#1d2330" font-weight="600">H01 · Cali</text>
+<rect x="180" y="36" width="119.9" height="10" fill="#9aa1ab"/>
+<text x="304.9" y="45" fill="#5d6472" font-size="9.5">$0.265 ✓</text>
+<rect x="180" y="48" width="35.4" height="10" fill="#0f766e"/>
+<text x="220.4" y="57" fill="#1d2330" font-size="9.5" font-weight="600">$0.078 ✓ (−70%)</text>
+<text x="170" y="82" text-anchor="end" fill="#1d2330" font-weight="600">H03 · Cali</text>
+<rect x="180" y="68" width="115.8" height="10" fill="#9aa1ab"/>
+<text x="300.8" y="77" fill="#5d6472" font-size="9.5">$0.256 ✓</text>
+<rect x="180" y="80" width="20.9" height="10" fill="#0f766e"/>
+<text x="205.9" y="89" fill="#1d2330" font-size="9.5" font-weight="600">$0.046 ✓ (−82%)</text>
+<text x="170" y="114" text-anchor="end" fill="#1d2330" font-weight="600">H07 · Cali</text>
+<rect x="180" y="100" width="154.5" height="10" fill="#9aa1ab"/>
+<text x="339.5" y="109" fill="#5d6472" font-size="9.5">$0.342 ✓</text>
+<rect x="180" y="112" width="33.3" height="10" fill="#0f766e"/>
+<text x="218.3" y="121" fill="#1d2330" font-size="9.5" font-weight="600">$0.074 ✓ (−78%)</text>
+<text x="170" y="146" text-anchor="end" fill="#1d2330" font-weight="600">H09 · Cali</text>
+<rect x="180" y="132" width="11.2" height="10" fill="#9aa1ab"/>
+<text x="196.2" y="141" fill="#5d6472" font-size="9.5">$0.025 ✓</text>
+<rect x="180" y="144" width="3.0" height="10" fill="#0f766e"/>
+<text x="188.0" y="153" fill="#1d2330" font-size="9.5" font-weight="600">$0.006 ✓ (−75%)</text>
+<text x="170" y="178" text-anchor="end" fill="#1d2330" font-weight="600">H10 · Cali</text>
+<rect x="180" y="164" width="148.5" height="10" fill="#9aa1ab"/>
+<text x="333.5" y="173" fill="#5d6472" font-size="9.5">$0.328 ✓</text>
+<rect x="180" y="176" width="58.8" height="10" fill="#b7791f"/>
+<text x="243.8" y="185" fill="#1d2330" font-size="9.5" font-weight="600">$0.130 ✗ (−60%)</text>
+<text x="170" y="210" text-anchor="end" fill="#1d2330" font-weight="600">H04 · Held</text>
+<rect x="180" y="196" width="360.0" height="10" fill="#9aa1ab"/>
+<text x="545.0" y="205" fill="#5d6472" font-size="9.5">$0.796 ✓</text>
+<rect x="180" y="208" width="61.2" height="10" fill="#0f766e"/>
+<text x="246.2" y="217" fill="#1d2330" font-size="9.5" font-weight="600">$0.135 ✓ (−83%)</text>
+<text x="170" y="242" text-anchor="end" fill="#1d2330" font-weight="600">H11 · Held</text>
+<rect x="180" y="228" width="309.1" height="10" fill="#9aa1ab"/>
+<text x="494.1" y="237" fill="#5d6472" font-size="9.5">$0.684 ✗</text>
+<rect x="180" y="240" width="115.5" height="10" fill="#b7791f"/>
+<text x="300.5" y="249" fill="#1d2330" font-size="9.5" font-weight="600">$0.255 ✗ (−63%)</text>
+<text x="170" y="274" text-anchor="end" fill="#1d2330" font-weight="600">H12 · Held</text>
+<rect x="180" y="260" width="187.0" height="10" fill="#9aa1ab"/>
+<text x="372.0" y="269" fill="#5d6472" font-size="9.5">$0.413 ✓</text>
+<rect x="180" y="272" width="41.6" height="10" fill="#0f766e"/>
+<text x="226.6" y="281" fill="#1d2330" font-size="9.5" font-weight="600">$0.092 ✓ (−78%)</text>
+<text x="170" y="306" text-anchor="end" fill="#1d2330" font-weight="600">H05 · Rema</text>
+<rect x="180" y="292" width="37.3" height="10" fill="#9aa1ab"/>
+<text x="222.3" y="301" fill="#5d6472" font-size="9.5">$0.083 ✓</text>
+<rect x="180" y="304" width="5.3" height="10" fill="#0f766e"/>
+<text x="190.3" y="313" fill="#1d2330" font-size="9.5" font-weight="600">$0.012 ✓ (−86%)</text>
+<text x="170" y="338" text-anchor="end" fill="#1d2330" font-weight="600">H06 · Rema</text>
+<rect x="180" y="324" width="268.4" height="10" fill="#9aa1ab"/>
+<text x="453.4" y="333" fill="#5d6472" font-size="9.5">$0.594 ✗</text>
+<rect x="180" y="336" width="70.6" height="10" fill="#b7791f"/>
+<text x="255.6" y="345" fill="#1d2330" font-size="9.5" font-weight="600">$0.156 ✗ (−74%)</text>
+<text x="170" y="370" text-anchor="end" fill="#1d2330" font-weight="600">H08 · Rema</text>
+<rect x="180" y="356" width="105.6" height="10" fill="#9aa1ab"/>
+<text x="290.6" y="365" fill="#5d6472" font-size="9.5">$0.234 ✗</text>
+<rect x="180" y="368" width="22.5" height="10" fill="#0f766e"/>
+<text x="207.5" y="377" fill="#1d2330" font-size="9.5" font-weight="600">$0.050 ✓ (−79%)</text>
+</svg><figcaption>Figure 1. Strict pre-frozen in-run list-price estimates and pass/fail outcomes across all 11 runnable tasks (<code>auto-gpt</code> vs manual <code>gpt-6-astra</code>). Checkmarks denote full isolated grader pass.</figcaption></figure>
+
+<div class="tablewrap"><table>
+  <thead><tr><th>Task &amp; split</th><th>Description</th><th>Manual <code>gpt-6-astra</code></th><th>Routed <code>auto-gpt</code></th><th>List Δ</th></tr></thead>
+  <tbody><tr><td><b>H01</b> · Calibration</td><td>Arch/Hyprland ASR (2 turns)</td><td>PASS · $0.2652 (4c, 45s)</td><td>PASS · $0.0782 (5c, 28s)</td><td>−70.5%</td></tr><tr><td><b>H03</b> · Calibration</td><td>TrackTron Rust vs SQLite CPU</td><td>PASS · $0.2560 (3c, 49s)</td><td>PASS · $0.0461 (3c, 19s)</td><td>−82.0%</td></tr><tr><td><b>H07</b> · Calibration</td><td>Search same-links bug (Chromium+API)</td><td>PASS · $0.3416 (12c, 90s)</td><td>PASS · $0.0737 (13c, 83s)</td><td>−78.4%</td></tr><tr><td><b>H09</b> · Calibration</td><td>#factory explainer UX rewrite</td><td>PASS · $0.0248 (2c, 13s)</td><td>PASS · $0.0061 (2c, 9s)</td><td>−75.3%</td></tr><tr><td><b>H10</b> · Calibration</td><td>#factory chat→card safety redesign</td><td>PASS · $0.3284 (11c, 73s)</td><td>FAIL · $0.1301 (15c, 114s)</td><td>−60.4%</td></tr><tr><td><b>H04</b> · Held-out</td><td>Agent-first platform thesis (2 turns)</td><td>PASS · $0.7961 (5c, 272s)</td><td>PASS · $0.1353 (5c, 94s)</td><td>−83.0%</td></tr><tr><td><b>H11</b> · Held-out</td><td>Channel-surf inline preview &amp; autoplay</td><td>FAIL · $0.6836 (25c, 201s)</td><td>FAIL · $0.2554 (23c, 165s)</td><td>−62.6%</td></tr><tr><td><b>H12</b> · Held-out</td><td>YouTube live visible-presenter gate</td><td>PASS · $0.4135 (15c, 68s)</td><td>PASS · $0.0920 (18c, 80s)</td><td>−77.8%</td></tr><tr><td><b>H05</b> · Remaining</td><td>Private search product feasibility</td><td>PASS · $0.0825 (3c, 52s)</td><td>PASS · $0.0117 (3c, 17s)</td><td>−85.8%</td></tr><tr><td><b>H06</b> · Remaining</td><td>Branded search demo + brand removal</td><td>FAIL · $0.5936 (14c, 297s)</td><td>FAIL · $0.1561 (15c, 168s)</td><td>−73.7%</td></tr><tr><td><b>H08</b> · Remaining</td><td>!anonimage DM→public privacy feature</td><td>FAIL · $0.2336 (9c, 67s)</td><td>PASS · $0.0497 (8c, 55s)</td><td>−78.7%</td></tr></tbody>
+  <tfoot><tr><th colspan="2">11-task total (strict in-run, zero post-hoc regrading)</th><th>8 / 11 · $4.0189 (103c, 1,226s)</th><th>8 / 11 · $1.0345 (110c, 830s)</th><th>−74.3%</th></tr></tfoot>
+</table></div>
+
+<p><b>Cross-provider Universal <code>auto</code> vs manual <code>claude-fable-5-1</code> (6 completed tasks):</b> Across <code>H01, H03, H04, H07, H09, H10</code>, Universal <code>auto</code> cut list-equivalent cost by <b>74.9%</b> ($1.6976 vs $6.7673). On held-out <code>H04</code> (2-turn platform strategy), Universal <code>auto</code> routed <b>7 file-inspection calls to the free local <code>qwen3.8-27b</code> GPU</b> and 3 synthesis calls to <code>gpt-6-sol</code>, passing all checks at $0.1587 vs $1.4348 (−88.9%) with zero Anthropic burn. Strict completions were 4/6 (5/6 substantive, as <code>H07</code> passed all 16 API/security checks and rendered <i>"Search isn’t available right now"</i>) vs 6/6 on Fable—failing the exact same <code>H10</code> task as <code>auto-gpt</code>.</p>
+
+<h2 id="audit">5. Independent ground-truth cross-check: why is it ~75% off?</h2>
+<p>A 74% cost drop warrants skepticism. We wrote a standalone auditor (<code>evaluation/audit_numbers.py</code>) that ignores campaign summaries and recomputes everything from raw SQLite <code>native_json</code> provider events and vendor HTTP rate-limit headers:</p>
+<ol>
+  <li><b>Zero token discrepancies (0 / 213 calls):</b> Every rollout row matched OpenAI's raw <code>response.completed</code> event identically, including reasoning tokens. Live <code>models.dev</code> prices match Astra/Fable/Sonnet and price <code>gpt-6-sol</code> output at $10/M vs $12/M in our table (−76.1% exact vs −74.3% reported).</li>
+  <li><b>Auto spent <i>more</i> tokens, at a much lower unit rate:</b> Across the 11 tasks, <code>auto-gpt</code> used <b>+9.0% more uncached input</b> (191k vs 175k), <b>+32.8% more cached input</b> (1.08M vs 812k), and <b>+26.9% more output+thinking tokens</b> (36.9k vs 29.1k; 110 vs 103 calls). All savings came from $0.10–$2/M vs $10/M model tiers while keeping cache hits at 86–97%. Auto was cheaper on <b>11 of 11 tasks</b> (min −60.4%, max −85.8%; 10,000-sample paired bootstrap 95% CI: <b>[68.4%, 79.7%]</b>).</li>
+  <li><b>Real vendor subscription header burn:</b>
+    <ul>
+      <li><b>Anthropic <code>five_hour</code> headers (direct in-campaign measurement):</b> Across the 6 completed Universal tasks, manual Fable burned <b>19.0%</b> of the 5-hour window vs <b>3.0%</b> for Universal Auto (<b>−84.2%</b>; 9.0% vs 1.0% = −88.9% on matched passes).</li>
+      <li><b>OpenAI <code>primary</code> weekly headers (calibrated across 2,252 pure single-model production calls):</b> OpenAI's subscription meter charges 0.189%/$ on <code>gpt-6-sol</code> vs 0.137%/$ on <code>gpt-6-astra</code> (~3.6× quota ratio rather than 5.0× list-price ratio), translating −74.3% list into <b>~−64.4% real weekly OpenAI quota savings</b>.</li>
+    </ul>
+  </li>
+</ol>
+
+<h2 id="representativeness">6. Sample representativeness &amp; baseline sensitivity</h2>
+<p>Auditing the 12-task sample against all 700 lifetime Auto sessions (<code>evaluation/audit_representativeness.py</code>) surfaced two key caveats:</p>
+<ul>
+  <li><b>Empirical manual habits are cheaper than $10/M Astra/Fable:</b> Across 16,800+ lifetime explicit requests, the operator's token-weighted manual input rate is <b>$6.23/MTok</b>; in a systematic sample of recent owner turns (led by <code>gemini-4-carbon</code>, <code>claude-opus-5-5</code>, and <code>grok-4.7</code>), the priced average is <b>$3.89/MTok</b>. Against those empirical baselines, Auto's saving is <b>−58.6%</b> (lifetime mix) and <b>−35.6%</b> (recent mix)—still well above our 20% bar, without overclaiming 75% against pragmatic manual choices.</li>
+  <li><b>Subgroup &amp; context-depth balance:</b> Separating the 6 coding loops from the 5 research/strategy/UX tasks preserves parity (3/6 vs 3/6, −70.8%) and (5/5 vs 5/5, −80.5%). However, clean container sandboxes ran at 2k–41k prompt tokens versus the 132.7k production turn median; simulating historical 54k–203k warm prefixes yields −78.4% (OpenAI) and −67.8% (Anthropic), but attention quality past 150k tokens requires full-prefix continuation tests.</li>
+</ul>
+
+<figure><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 230" role="img" aria-label="Auto-GPT savings across alternative manual baselines and real quota meters" font-family="system-ui,sans-serif" font-size="11">
+<text x="275" y="33" text-anchor="end" fill="#1d2330">vs pinned Astra / Fable ($10/$50)</text>
+<rect x="285" y="18" width="267.5" height="21" fill="#0f766e"/>
+<text x="559.5" y="33" fill="#1d2330" font-weight="600">−74.3%</text>
+<text x="275" y="66" text-anchor="end" fill="#1d2330">vs OpenAI real weekly quota meter</text>
+<rect x="285" y="51" width="231.8" height="21" fill="#1e4e8c"/>
+<text x="523.8" y="66" fill="#1d2330" font-weight="600">−64.4%</text>
+<text x="275" y="99" text-anchor="end" fill="#1d2330">vs 8-week empirical manual mix ($6.23/M)</text>
+<rect x="285" y="84" width="211.0" height="21" fill="#0f766e"/>
+<text x="503.0" y="99" fill="#1d2330" font-weight="600">−58.6%</text>
+<text x="275" y="132" text-anchor="end" fill="#1d2330">vs pinned Claude Opus 5 ($5/$25)</text>
+<rect x="285" y="117" width="174.6" height="21" fill="#0f766e"/>
+<text x="466.6" y="132" fill="#1d2330" font-weight="600">−48.5%</text>
+<text x="275" y="165" text-anchor="end" fill="#1d2330">vs recent owner manual mix ($3.89/M)</text>
+<rect x="285" y="150" width="128.2" height="21" fill="#0f766e"/>
+<text x="420.2" y="165" fill="#1d2330" font-weight="600">−35.6%</text>
+<text x="275" y="198" text-anchor="end" fill="#1d2330">vs pinned Claude Sonnet 4.6 ($3/$15)</text>
+<rect x="285" y="183" width="51.1" height="21" fill="#6d4fa1"/>
+<text x="343.1" y="198" fill="#1d2330" font-weight="600">−14.2%</text>
+</svg><figcaption>Figure 2. Sensitivity of the 11-task cost reduction across real subscription quota meters and cheaper manual baseline habits.</figcaption></figure>
+
+<h2 id="policy">7. Addressing H10: Policy B9 and remaining quality gaps</h2>
+<p><b>Final-publication qualification (28 November 2026).</b> Equal 8/11 completion totals do not establish quality parity: Auto failed H10 while the baseline failed H08, only three tasks were held out, and repeated trials did not establish equivalent reliability. There is no controlled B9 ablation or pinned-cheap-workhorse comparison establishing the independent benefit of escalation or dynamic routing. The fresh H10 pass below used only the workhorse, so it does not demonstrate escalation; the later H10 and long-context failures remain negative results. Public checks can stay green while a hidden requirement is missed. Historical deployment claims below are not a new production-survival verification. Finalization adds no experiments and is not peer review.</p>
+<p>Both suites pinpointed the same flaw in pure warm-cache retention (Policy B2): on <code>H10</code>, the workhorse saw 3 consecutive failing public test runs and never escalated. Inspection also revealed a bug in <code>auto_route.py</code>: pytest summaries like <code>1 failed, 5 passed</code> put <code>passed</code> after <code>failed</code> on the same line, causing offset comparison to misclassify mixed test failures as clean passes!</p>
+<p>We implemented, tested (351/351 router tests passing), and deployed <b><code>auto-2026-11-15.1</code></b> with active v2 stage (router commit <code>b2e3dbb</code>):</p>
+<ul>
+  <li><b>B7+ mixed-summary &amp; JSON verifier fix:</b> Any test summary line containing a real failure now classifies as <code>fail</code> regardless of trailing pass counts, alongside <code>"passed": false</code> JSON verdicts.</li>
+  <li><b>B9 verification-streak escalation (<code>K_VERIFY_ESCALATE = 3</code>):</b> 1–2 failures remain on the warm workhorse (preserving B2 savings on ordinary hiccups); a 3rd consecutive failing action in the same episode escalates once to a <code>strong</code>/<code>frontier</code> model (same provider first), retains that upgrade across subsequent edits, and releases back to a workhorse at a clean episode boundary via B4.</li>
+</ul>
+<p><b>Policy B9 (`auto-2026-11-15.1`) live verification on H10 (`gpt-b9-verify-10`):</b> After shipping `K_VERIFY_ESCALATE = 3` and the mixed-summary pytest detector in router commit <code>b2e3dbb</code>, we re-ran `H10` fresh. `auto-gpt` achieved <b>PASS</b> ($0.1071, 84.8s, models: <code>{&quot;gpt-6-sol&quot;: 11}</code>) against manual `gpt-6-astra` (PASS, $0.5036, 76.6s).</p><p><b>Pragmatic daily-driver comparison (`opus55-b1plus-confirm-12`, Universal `auto-2026-11-15.1` + B1+ vs `claude-opus-5-5` at $4/$20):</b> Our first run against `claude-opus-5-5` (`opus55-daily-driver-11`) caught `claude-sonnet-5` sitting first on the Universal workhorse rung, where it burned 37k–47k thinking tokens per coding task and cost +18% more list (+50% more 5h Anthropic header burn) than Opus 5.5 while solving fewer tasks (1/3 vs 2/3). After promoting `gpt-6.1-sol` and `gpt-6-sol` ahead of `claude-sonnet-5` on the workhorse rung (`B1+`, commit <code>eb33f15</code>), re-running all four technical tasks (`H03, H07, H10, H12`) achieved <b>3/4 verified on Universal Auto ($0.3633, 396s, 0% Anthropic quota burn) vs 4/4 on Opus 5.5 ($1.5074, 439s, −75.9% list cost)</b>.</p><div class='tablewrap'><table><thead><tr><th>Task</th><th>Manual claude-opus-5-5 ($4/$20)</th><th>Universal Auto (B1+ + B9)</th><th>List Δ</th></tr></thead><tbody><tr><td>H07</td><td>PASS ($0.4060, 122.9s)</td><td>PASS ($0.1013, 107.4s, {&quot;gpt-6.1-sol&quot;: 13})</td><td>−75.0%</td></tr><tr><td>H10</td><td>PASS ($0.5452, 173.3s)</td><td>FAIL ($0.1180, 126.5s, {&quot;gpt-6.1-sol&quot;: 15})</td><td>−78.4%</td></tr><tr><td>H03</td><td>PASS ($0.1892, 41.4s)</td><td>PASS ($0.0543, 50.7s, {&quot;gpt-6.1-sol&quot;: 3})</td><td>−71.3%</td></tr><tr><td>H12</td><td>PASS ($0.3670, 101.8s)</td><td>PASS ($0.0898, 111.6s, {&quot;gpt-6.1-sol&quot;: 17})</td><td>−75.5%</td></tr></tbody></table></div><p><b>Full ~90k-token historical prefix continuation test (`gpt-longctx-h10-13` on `H10LONG`):</b> When fed the sanitized 433-message historical session prefix (~1.13M cumulative prompt tokens across 13 calls, 91.93% cache-read hit), cost and speed scaling held (<b>$0.4316 / 81s vs $2.0721 / 122s, −79.2%</b>), <b>but</b> `gpt-6-sol` passed the 3 public checks while missing the hidden paraphrase status check (8/9 checks, FAIL), whereas `gpt-6-astra` passed all 9/9 checks (PASS). This directly validates our caveat: above ~85k–100k tokens of messy historical dialogue, frontier attention still holds a real edge on subtle implicit requirements when public tests do not fail.</p>
+
+<h2 id="bugs">8. Six production router bugs uncovered and fixed</h2>
+<p>Running realistic streaming tool loops against the live proxy caught six production defects that unit mocks had missed, all fixed and deployed with regression tests:</p>
+<ol>
+  <li><code>340896a</code> — Native string provider errors crashed rollout accounting (<code>AttributeError</code>).</li>
+  <li><code>2ef5c78</code> — Google protobuf JSON omits <code>remainingFraction</code> at <code>0.0</code>, leaving exhausted Argon showing 87% remaining on the dashboard and in Auto's headroom table.</li>
+  <li><code>46f753c</code> — Pre-entitlement Google <code>-disabled</code> placeholder IDs were published as live models; added filter + debounced 404 catalog refresh.</li>
+  <li><code>1425a01</code> — <code>_ResponsesSSE</code> stored tool arguments arriving on <code>function_call_arguments.done</code> (when Codex skipped <code>.delta</code> events) in SQLite without emitting an SSE chunk to the client, delivering <code>{}</code> and causing false empty-arg tool failures in OpenCode.</li>
+  <li><code>aa94ed9</code> — Uvicorn lacked <code>timeout_graceful_shutdown=15</code> below systemd's 20s <code>SIGKILL</code>, risking outbox truncation during restarts; priced promoted ladder models.</li>
+  <li><code>e8a665b</code> / <code>a417cb7</code> — Committed live Antigravity backend, <code>admin_only</code> gating, and Google RPC <code>ErrorInfo</code>/<code>RetryInfo</code> extraction so transient per-minute 429s never masquerade as spent multi-hour subscription pools.</li>
+</ol>
+
+<p class="citation">Infected Research / FrackLabs. 2026. <cite>Routing the Bill: Cache-First Model Routing Across Real Agent Loops.</cite> Research Report 004, FL-TR-2026-04. Version 1.0, finalized 28 November 2026; originally published as draft 0.1 on 15 November 2026.</p>
+<footer>Infected Research / FrackLabs · FL-TR-2026-04 · Final 1.0 · 28 November 2026 · <a href="data.json">data.json</a> · <a href="./">Overview</a> · <a href="/research/">Research index</a></footer>
+</main></body></html>

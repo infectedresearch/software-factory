@@ -1,0 +1,102 @@
+{
+  "report": "FL-TR-2026-02",
+  "status": "final",
+  "version": "1.0",
+  "finalized_date": "2026-11-28",
+  "original_draft_version": "0.3",
+  "publication_note": "Editorial finalization only; no new experiments or peer review. Historical measurements and deployment evidence are unchanged.",
+  "date": "2026-11-13",
+  "live_recolor": {
+    "request_id": "1569743046805946368",
+    "reply_id": "1569745455523438632",
+    "protected_pixels_exact_both_choices": true,
+    "sha256": [
+      "670bbedb731a0ae635ec622f5de147fede1c58c82f3a0f1f378a0b70a2041f3e",
+      "3941801e5871e0a9dda11447bba8bcab7699dee2261c64ca8bc4ed2867e9f376"
+    ]
+  },
+  "curated_recoveries": [
+    {
+      "reply_id": "1569094705986281515",
+      "sha256": "5370e77aa0f4e2d4b3659db307cca38137bb17f1136d6aa688bded335c4bf9ed"
+    },
+    {
+      "reply_id": "1569103294469513316",
+      "sha256": "8051f914980bd2e443b218557440ae0288d997e7b73665abc9e7b5fdf336cbc8"
+    }
+  ],
+  "controls": {
+    "count": 5,
+    "visual_only_correct": 3,
+    "combined_gate_correct": 5,
+    "scope": "selected flat-background recolor controls, not general accuracy"
+  },
+  "unverified": [
+    "automatic accessory additions (disabled after study)"
+  ],
+  "lifecycle_comic_pair": {
+    "scope": "private synthetic two-panel request (one circle); delivery mechanics only",
+    "initial_request_id": "1569844847907578008",
+    "resume_request_id": "1569846065828728995",
+    "reply_id": "1569852552215007304",
+    "reply_references_resume_request": true,
+    "cancellation_acknowledged": true,
+    "panel_1_reused_after_resume": true,
+    "connector_restart": {
+      "old_pid": 508961,
+      "new_pid": 551574,
+      "same_status_message": "1569846082631114787"
+    },
+    "page_rejections_then_fresh_rerender": 1,
+    "voting_reactions": [
+      "1️⃣",
+      "2️⃣",
+      "❌"
+    ],
+    "page_sha256": [
+      "e89e0ceb068296c768c7ae62367a4552920eb62f42ed5b2efaaafe8c1661ea88",
+      "2b04d6384951e0ab546ef35d070725ae6d5f1db865ee9097b8564f2884d937b5"
+    ],
+    "direct_review": "both pages: one complete circle moving left to right; choice 2 second circle ~7% wider"
+  },
+  "eight_panel_comic_pair": {
+    "scope": "private production Discord request combining ordered binary-cartoon and colour-photographic references into an 8 to 12 panel comic",
+    "prompt": "!kraken can you combine these two images into a 8 to 12 panel comic?",
+    "renderer_contract": 36,
+    "request_id": "1570679467163127859",
+    "reply_id": "1570683063338409984",
+    "reply_references_request": true,
+    "status_message_id": "1570679479490187317",
+    "vote_take_id": "1za4VYqdhB6iwvU3vfTg9DHoGrqiUl11",
+    "voting_reactions": [
+      "1️⃣",
+      "2️⃣",
+      "❌"
+    ],
+    "resumed_from_verified_checkpoints": true,
+    "final_resume_elapsed_s": 868,
+    "binary_ink_calibration": {
+      "cells": 15,
+      "repetitions": 3,
+      "correct": 45,
+      "total": 45,
+      "scope": "labelled binary-ink vs hatched/grey-wash cells from this storyline"
+    },
+    "page_sha256": [
+      "57ca7b5213d6c4b04d5c071d96f67f38e50bf5c99dab75476fd0bdaa5992143c",
+      "9a40d3f37891d4c8edcc70a24aeb05bce08836d06d56a965c6bb08bf5ff1732d"
+    ],
+    "direct_review": "both pages: exact 8-panel wordless binary-ink grids preserving source order (Panel 1 cartoon mouse at wheel, Panel 2 illustrated human with rocket, Panels 3-8 shared rocket drop-and-catch arc); human facial/suit contours use finer interior strokes than solid cel fills, and ship's wheel size/position shifts across cells"
+  },
+  "accessory_study": {
+    "scope": "seven private requests; small selected set, not an accuracy estimate",
+    "rule": "enable bounded additions only if no gate-passing bounded output is wrong on direct review and the bounded lane is correct at least as often as the whole-image path",
+    "crossing_limit": 0.1,
+    "bounded_gate_passes": 4,
+    "bounded_false_accepts": 2,
+    "bounded_correct": 3,
+    "whole_correct": 3,
+    "whole_false_accepts": 3,
+    "decision": "automatic bounded additions remain disabled"
+  }
+}

@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 430 300" width="430" height="300" role="img" aria-label="Paired 11-task benchmark: verified completions 8/11 vs 8/11, list-equivalent cost $4.02 to $1.03, Anthropic 5h session header burn 19% to 3%" font-family="monospace">
+<text x="0" y="24" fill="#edf4ee" font-size="11.5" font-weight="600">Verified task completions (11 tasks)</text>
+<text x="112" y="51" text-anchor="end" fill="#a5b4a2" font-size="10.5">Manual Astra</text>
+<rect x="120" y="36" width="210.0" height="21" fill="#a5b4a2"/>
+<text x="336" y="51" fill="#edf4ee" font-size="11" font-weight="600">8 / 11</text>
+<text x="112" y="80" text-anchor="end" fill="#a5b4a2" font-size="10.5">Auto-GPT</text>
+<rect x="120" y="65" width="210.0" height="21" fill="#58ff7d"/>
+<text x="336" y="80" fill="#edf4ee" font-size="11" font-weight="600">8 / 11</text>
+
+<text x="0" y="116" fill="#edf4ee" font-size="11.5" font-weight="600">11-task list-price estimate (all turns)</text>
+<text x="112" y="143" text-anchor="end" fill="#a5b4a2" font-size="10.5">Manual Astra</text>
+<rect x="120" y="128" width="240.0" height="21" fill="#a5b4a2"/>
+<text x="366" y="143" fill="#edf4ee" font-size="11" font-weight="600">$4.02</text>
+<text x="112" y="172" text-anchor="end" fill="#a5b4a2" font-size="10.5">Auto-GPT</text>
+<rect x="120" y="157" width="61.8" height="21" fill="#58ff7d"/>
+<text x="188" y="172" fill="#58ff7d" font-size="11" font-weight="600">$1.03 (−74.3%)</text>
+
+<text x="0" y="208" fill="#edf4ee" font-size="11.5" font-weight="600">Direct Claude 5h header burn (6 tasks)</text>
+<text x="112" y="235" text-anchor="end" fill="#a5b4a2" font-size="10.5">Manual Fable</text>
+<rect x="120" y="220" width="228.0" height="21" fill="#a5b4a2"/>
+<text x="354" y="235" fill="#edf4ee" font-size="11" font-weight="600">19.0%</text>
+<text x="112" y="264" text-anchor="end" fill="#a5b4a2" font-size="10.5">Universal Auto</text>
+<rect x="120" y="249" width="36.0" height="21" fill="#69e7f8"/>
+<text x="162" y="264" fill="#69e7f8" font-size="11" font-weight="600">3.0% (−84.2%)</text>
+<text x="0" y="291" fill="#a5b4a2" font-size="9.5">B9 follow-up rescued H10 (9/11) · calibrated OpenAI plan Δ ≈ −64.4%</text>
+</svg>
